@@ -21,7 +21,7 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("loginForm.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
-        stage.setTitle("Inventory Management System");
+        stage.setTitle("S2 Project");
         stage.setScene(scene);
         stage.show();
     }
