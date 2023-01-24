@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="sample.CustomerController">
+    <VBox spacing="10">
+        <Label text="Name:" />
+        <TextField fx:id="nameField" />
+        <Label text="Address:" />
+        <TextField fx:id="addressField" />
+        <Label text="Postal Code:" />
+        <TextField fx:id="postalCodeField" />
+        <Label text="Phone:" />
+        <TextField fx:id="phoneField" />
+        <Label text="Country:" />
+        <ComboBox fx:id="countryComboBox" />
+        <Label text="First Level Division:" />
+        <ComboBox fx:id="firstLevelDivisionComboBox" />
+        <HBox spacing="10">
+            <Button text="Add" fx:id="addButton" />
+            <Button text="Update" fx:id="updateButton" />
+            <Button text="Delete" fx:id="deleteButton" />
+        </HBox>
+    </VBox>
+    <TableView fx:id="customerTable" prefHeight="200" >
+        <columns>
+            <TableColumn text="Name" fx:id="nameColumn" />
+            <TableColumn text="Address" fx:id="addressColumn" />
+            <TableColumn text="Postal Code" fx:id="postalCodeColumn" />
+            <TableColumn text="Phone" fx:id="phoneColumn" />
+            <TableColumn text="Country" fx:id="countryColumn" />
+            <TableColumn text="First Level Division" fx:id="firstLevelDivisionColumn" />
+        </columns>
+    </TableView>
+</VBox>
+
