@@ -38,6 +38,7 @@ public class CustomerController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Populate the country combo box with data from the database
         populateCountryComboBox();
+
         // Populate the first level division combo box with data filtered by the user's selection of a country
         countryComboBox.setOnAction(event -> {
             String selectedCountry = countryComboBox.getSelectionModel().getSelectedItem();
@@ -51,9 +52,9 @@ public class CustomerController implements Initializable {
     @FXML
     private void addCustomer() {
         try {
-            JDBC.makeConnection();
+
             // Prepare the insert statement
-            PreparedStatement stmt = JDBC.getConnection().prepareStatement("INSERT INTO customers (name, address, postal_code, phone_number, country, first_level_division) VALUES (?, ?, ?, ?, ?, ?)");
+            PreparedStatement stmt = JDBC.getConnection().prepareStatement("INSERT INTO customers (name, address, postal_code, phone_number, country, Division_ID) VALUES (?, ?, ?, ?, ?, ?)");
             stmt.setString(1, nameField.getText());
             stmt.setString(2, addressField.getText());
             stmt.setString(3, postalCodeField.getText());
@@ -62,8 +63,7 @@ public class CustomerController implements Initializable {
             stmt.setString(6, firstLevelDivisionComboBox.getSelectionModel().getSelectedItem());
             // Execute the insert statement
             stmt.executeUpdate();
-            // Close the connection
-            JDBC.closeConnection();
+
             // Clear the form fields
             clearForm();
             // Refresh the customer table
@@ -77,9 +77,9 @@ public class CustomerController implements Initializable {
     @FXML
     private void updateCustomer() {
         try {
-            JDBC.makeConnection();
+
             // Prepare the update statement
-            PreparedStatement stmt = JDBC.getConnection().prepareStatement("UPDATE customers SET name = ?, address = ?, postal_code = ?, phone_number = ?, country = ?, first_level_division = ? WHERE customer_id = ?");
+            PreparedStatement stmt = JDBC.getConnection().prepareStatement("UPDATE customers SET name = ?, address = ?, postal_code = ?, phone_number = ?, country = ?, Division_ID = ? WHERE customer_id = ?");
             stmt.setString(1, nameField.getText());
             stmt.setString(2, addressField.getText());
             stmt.setString(3, postalCodeField.getText());
@@ -89,8 +89,8 @@ public class CustomerController implements Initializable {
             stmt.setInt(7, customerTable.getSelectionModel().getSelectedItem().getCustomerId());
             // Execute the update statement
             stmt.executeUpdate();
-            // Close the connection
-            JDBC.closeConnection();
+
+
             // Clear the form fields
             clearForm();
             // Refresh the customer table
@@ -104,7 +104,7 @@ public class CustomerController implements Initializable {
     @FXML
     private void deleteCustomer() {
         try {
-            JDBC.makeConnection();
+
             // Get the selected customer from the table
             Customer selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
             // Prepare the delete statement for the customer's appointments
@@ -117,11 +117,11 @@ public class CustomerController implements Initializable {
             stmt2.setInt(1, selectedCustomer.getCustomerId());
             // Execute the delete statement for the customer
             stmt2.executeUpdate();
-            // Close the connection
-            JDBC.closeConnection();
-            // Update the customer table
             populateCustomerTable();
-            // Show a message to the user
+
+
+
+
             showDeleteMessage();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -140,17 +140,16 @@ public class CustomerController implements Initializable {
     private void populateCountryComboBox() {
         try {
             // Make a connection to the database
-            JDBC.makeConnection();
+
             // Prepare a statement to select all the countries from the database
-            PreparedStatement stmt = JDBC.getConnection().prepareStatement("SELECT country_name FROM countries");
+            PreparedStatement stmt = JDBC.getConnection().prepareStatement("SELECT country FROM countries");
             // Execute the query and store the results in a ResultSet
             ResultSet rs = stmt.executeQuery();
             // Iterate through the results and add each country to the combo box
             while (rs.next()) {
-                countryComboBox.getItems().add(rs.getString("country_name"));
+                countryComboBox.getItems().add(rs.getString("country"));
             }
-            // Close the connection
-            JDBC.closeConnection();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -170,17 +169,17 @@ public class CustomerController implements Initializable {
     private void populateFirstLevelDivisionComboBox(String selectedCountry) {
         // Clear the current items in the combo box
         firstLevelDivisionComboBox.getItems().clear();
+        Connection connection = JDBC.getConnection();
         try {
             // Connect to the database
-            Connection connection = JDBC.getConnection();
             // Prepare the SQL statement to select the first-level divisions based on the selected country
-            PreparedStatement statement = connection.prepareStatement("SELECT first_level_division FROM divisions WHERE country = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT Division_ID FROM first_level_divisions WHERE country_id = ?");
             statement.setString(1, selectedCountry);
             // Execute the query and store the results in a ResultSet
             ResultSet resultSet = statement.executeQuery();
             // Iterate through the ResultSet and add the first-level divisions to the combo box
             while (resultSet.next()) {
-                firstLevelDivisionComboBox.getItems().add(resultSet.getString("first_level_division"));
+                firstLevelDivisionComboBox.getItems().add(resultSet.getString("Division_ID"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -190,27 +189,33 @@ public class CustomerController implements Initializable {
 
     private void populateCustomerTable() {
         try {
-            // Make a connection to the database
-            JDBC.makeConnection();
-            // Prepare a statement to select all the customers from the database
-            PreparedStatement stmt = JDBC.getConnection().prepareStatement("SELECT * FROM customers");
-            // Execute the query and store the results in a ResultSet
-            ResultSet rs = stmt.executeQuery();
+
+            // Prepare the select statement
+            PreparedStatement stmt = JDBC.getConnection().prepareStatement("SELECT * FROM customers, countries");
+            // Execute the select statement
+            ResultSet resultSet = stmt.executeQuery();
             // Clear the customer list
             customerList.clear();
-            // Iterate through the results and create a new Customer object for each row
-            while (rs.next()) {
-                customerList.add(new Customer(rs.getInt("customer_id"), rs.getString("name"), rs.getString("address"),
-                        rs.getString("postal_code"), rs.getString("phone"), rs.getString("first_level_division"),
-                        rs.getString("country")));
+            // Populate the customer list with data from the result set
+            while (resultSet.next()) {
+                customerList.add(new Customer(
+                        resultSet.getInt("customer_id"),
+                        resultSet.getString("customer_name"),
+                        resultSet.getString("address"),
+                        resultSet.getString("postal_code"),
+                        resultSet.getString("phone"),
+                        resultSet.getString("Division_ID"),
+                        resultSet.getString("country")
+                ));
             }
             // Close the connection
-            JDBC.closeConnection();
+
             // Set the items of the customer table to the customer list
             customerTable.setItems(customerList);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 
 }

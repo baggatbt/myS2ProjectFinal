@@ -1,12 +1,17 @@
 package sample;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,14 +44,22 @@ public class LoginController implements Initializable {
                     System.out.println("Login Success!");
                     errorLabel.setText("");
                     // navigate to next screen
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("customerRecordForm.fxml"));
+                    Parent customerForm = loader.load();
+                    Scene customerScene = new Scene(customerForm);
+
+// Get the primary stage of the application
+                    Stage primaryStage = (Stage) loginButton.getScene().getWindow();
+
+// Set the scene of the primary stage to the customerForm
+                    primaryStage.setScene(customerScene);
+
                 } else {
                     // login failed
                     errorLabel.setText("Incorrect username or password.");
                 }
-            } catch (SQLException e) {
+            } catch (SQLException | IOException e) {
                 errorLabel.setText("Error: " + e.getMessage());
-            } finally {
-                JDBC.closeConnection();
             }
         });
     }
