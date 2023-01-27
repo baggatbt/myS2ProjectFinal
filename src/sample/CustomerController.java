@@ -10,21 +10,24 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
+
+
 
 public class CustomerController implements Initializable {
 
+
+    public Button deleteCustomerButton;
+    public Button updateCustomerButton;
+    public Button addCustomerButton;
+    public TextField phoneField;
     @FXML
     private TextField nameField;
     @FXML
     private TextField addressField;
     @FXML
     private TextField postalCodeField;
-    @FXML
-    private TextField phoneNumberField;
     @FXML
     private ComboBox<String> countryComboBox;
     @FXML
@@ -48,17 +51,20 @@ public class CustomerController implements Initializable {
         populateCustomerTable();
     }
 
+
+
+
     // Method to add a new customer to the database
     @FXML
     private void addCustomer() {
         try {
 
             // Prepare the insert statement
-            PreparedStatement stmt = JDBC.getConnection().prepareStatement("INSERT INTO customers (name, address, postal_code, phone_number, country, Division_ID) VALUES (?, ?, ?, ?, ?, ?)");
+            PreparedStatement stmt = JDBC.getConnection().prepareStatement("INSERT INTO customers (customer_name, address, postal_code, phone, country, Division_ID) VALUES (?, ?, ?, ?, ?, ?)");
             stmt.setString(1, nameField.getText());
             stmt.setString(2, addressField.getText());
             stmt.setString(3, postalCodeField.getText());
-            stmt.setString(4, phoneNumberField.getText());
+            stmt.setString(4, phoneField.getText());
             stmt.setString(5, countryComboBox.getSelectionModel().getSelectedItem());
             stmt.setString(6, firstLevelDivisionComboBox.getSelectionModel().getSelectedItem());
             // Execute the insert statement
@@ -79,11 +85,11 @@ public class CustomerController implements Initializable {
         try {
 
             // Prepare the update statement
-            PreparedStatement stmt = JDBC.getConnection().prepareStatement("UPDATE customers SET name = ?, address = ?, postal_code = ?, phone_number = ?, country = ?, Division_ID = ? WHERE customer_id = ?");
+            PreparedStatement stmt = JDBC.getConnection().prepareStatement("UPDATE customers SET customer_name = ?, address = ?, postal_code = ?, phone = ?, country = ?, Division_ID = ? WHERE customer_id = ?");
             stmt.setString(1, nameField.getText());
             stmt.setString(2, addressField.getText());
             stmt.setString(3, postalCodeField.getText());
-            stmt.setString(4, phoneNumberField.getText());
+            stmt.setString(4, phoneField.getText());
             stmt.setString(5, countryComboBox.getSelectionModel().getSelectedItem());
             stmt.setString(6, firstLevelDivisionComboBox.getSelectionModel().getSelectedItem());
             stmt.setInt(7, customerTable.getSelectionModel().getSelectedItem().getCustomerId());
@@ -167,8 +173,7 @@ public class CustomerController implements Initializable {
 
 
     private void populateFirstLevelDivisionComboBox(String selectedCountry) {
-        // Clear the current items in the combo box
-        firstLevelDivisionComboBox.getItems().clear();
+        
         Connection connection = JDBC.getConnection();
         try {
             // Connect to the database
@@ -177,21 +182,27 @@ public class CustomerController implements Initializable {
             statement.setString(1, selectedCountry);
             // Execute the query and store the results in a ResultSet
             ResultSet resultSet = statement.executeQuery();
+            System.out.println(resultSet);
             // Iterate through the ResultSet and add the first-level divisions to the combo box
             while (resultSet.next()) {
+                System.out.println(resultSet);
                 firstLevelDivisionComboBox.getItems().add(resultSet.getString("Division_ID"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+
+
 
 
     private void populateCustomerTable() {
         try {
 
             // Prepare the select statement
-            PreparedStatement stmt = JDBC.getConnection().prepareStatement("SELECT * FROM customers, countries");
+            PreparedStatement stmt = JDBC.getConnection().prepareStatement("SELECT * FROM customers,countries");
             // Execute the select statement
             ResultSet resultSet = stmt.executeQuery();
             // Clear the customer list

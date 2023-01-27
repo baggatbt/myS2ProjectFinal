@@ -17,9 +17,9 @@
         <Label text="First Level Division:" />
         <ComboBox fx:id="firstLevelDivisionComboBox" />
         <HBox spacing="10">
-            <Button text="Add" fx:id="addButton" />
-            <Button text="Update" fx:id="updateButton" />
-            <Button text="Delete" fx:id="deleteButton" />
+            <Button text="Add" fx:id="addCustomerButton" onAction="#addCustomer" />
+            <Button text="Update" fx:id="updateCustomerButton" />
+            <Button text="Delete" fx:id="deleteCustomerButton" />
         </HBox>
     </VBox>
     <TableView fx:id="customerTable" prefHeight="200" >
