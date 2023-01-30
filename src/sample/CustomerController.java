@@ -176,27 +176,32 @@ public class CustomerController implements Initializable {
         Connection connection = JDBC.getConnection();
         try {
             // Connect to the database
-            // Prepare the SQL statement to select the first-level divisions based on the selected country
+            // Prepare the SQL statement to select the country_ID based on the selected country
             PreparedStatement statementCountryName = connection.prepareStatement("SELECT Country_ID FROM countries WHERE Country = ?");
             statementCountryName.setString(1, selectedCountry);
+            ResultSet resultSet1 = statementCountryName.executeQuery();
+            resultSet1.next();
+            int countryID = resultSet1.getInt("Country_ID");
 
-            // ON THE RIGHT TRACK
+            // Prepare the SQL statement to select the first-level divisions based on the selected country_ID
+            PreparedStatement statement = connection.prepareStatement("SELECT Division FROM first_level_divisions WHERE country_id = ?");
+            statement.setInt(1, countryID);
 
-            PreparedStatement statement = connection.prepareStatement("SELECT Division FROM first_level_divisions, countries WHERE Country_ID = ?");
-            statement.setString(1, String.valueOf(statementCountryName));
             // Execute the query and store the results in a ResultSet
             ResultSet resultSet = statement.executeQuery();
 
             // Clear the contents of the first-level division combo box
             firstLevelDivisionComboBox.getItems().clear();
+
             // Iterate through the ResultSet and add the first-level divisions to the combo box
             while (resultSet.next()) {
-                firstLevelDivisionComboBox.getItems().add(resultSet.getString("Division_ID"));
+                firstLevelDivisionComboBox.getItems().add(resultSet.getString("Division"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 
 
 
