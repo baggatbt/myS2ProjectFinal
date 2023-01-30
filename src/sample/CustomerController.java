@@ -46,6 +46,7 @@ public class CustomerController implements Initializable {
         countryComboBox.setOnAction(event -> {
             String selectedCountry = countryComboBox.getSelectionModel().getSelectedItem();
             populateFirstLevelDivisionComboBox(selectedCountry);
+            System.out.println(selectedCountry);
         });
         // Populate the customer table with data from the database
         populateCustomerTable();
@@ -60,13 +61,12 @@ public class CustomerController implements Initializable {
         try {
 
             // Prepare the insert statement
-            PreparedStatement stmt = JDBC.getConnection().prepareStatement("INSERT INTO customers (customer_name, address, postal_code, phone, country, Division_ID) VALUES (?, ?, ?, ?, ?, ?)");
+            PreparedStatement stmt = JDBC.getConnection().prepareStatement("INSERT INTO customers (customer_name, address, postal_code, phone, Division_ID) VALUES (?, ?, ?, ?, ?)");
             stmt.setString(1, nameField.getText());
             stmt.setString(2, addressField.getText());
             stmt.setString(3, postalCodeField.getText());
             stmt.setString(4, phoneField.getText());
-            stmt.setString(5, countryComboBox.getSelectionModel().getSelectedItem());
-            stmt.setString(6, firstLevelDivisionComboBox.getSelectionModel().getSelectedItem());
+            stmt.setString(5, firstLevelDivisionComboBox.getSelectionModel().getSelectedItem());
             // Execute the insert statement
             stmt.executeUpdate();
 
@@ -173,27 +173,31 @@ public class CustomerController implements Initializable {
 
 
     private void populateFirstLevelDivisionComboBox(String selectedCountry) {
-        
         Connection connection = JDBC.getConnection();
         try {
             // Connect to the database
             // Prepare the SQL statement to select the first-level divisions based on the selected country
-            PreparedStatement statement = connection.prepareStatement("SELECT Division_ID FROM first_level_divisions WHERE country_id = ?");
-            statement.setString(1, selectedCountry);
+            PreparedStatement statementCountryName = connection.prepareStatement("SELECT Country_ID FROM countries WHERE Country = ?");
+            statementCountryName.setString(1, selectedCountry);
+
+            // ON THE RIGHT TRACK
+
+            PreparedStatement statement = connection.prepareStatement("SELECT Division FROM first_level_divisions, countries WHERE Country_ID = ?");
+            statement.setString(1, String.valueOf(statementCountryName));
             // Execute the query and store the results in a ResultSet
             ResultSet resultSet = statement.executeQuery();
-            System.out.println(resultSet);
+
+            // Clear the contents of the first-level division combo box
+            firstLevelDivisionComboBox.getItems().clear();
             // Iterate through the ResultSet and add the first-level divisions to the combo box
             while (resultSet.next()) {
-                System.out.println(resultSet);
                 firstLevelDivisionComboBox.getItems().add(resultSet.getString("Division_ID"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
+
 
 
 
