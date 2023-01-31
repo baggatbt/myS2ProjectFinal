@@ -99,7 +99,7 @@ public class CustomerController implements Initializable {
             stmt.setString(4, phoneField.getText());
             stmt.setString(5, countryComboBox.getSelectionModel().getSelectedItem());
             stmt.setString(6, firstLevelDivisionComboBox.getSelectionModel().getSelectedItem());
-            stmt.setInt(7, customerTable.getSelectionModel().getSelectedItem().getCustomerId());
+            stmt.setInt(7, customerTable.getSelectionModel().getSelectedItem().getCustomerID());
             // Execute the update statement
             stmt.executeUpdate();
 
@@ -122,12 +122,12 @@ public class CustomerController implements Initializable {
             Customer selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
             // Prepare the delete statement for the customer's appointments
             PreparedStatement stmt1 = JDBC.getConnection().prepareStatement("DELETE FROM appointments WHERE customer_id = ?");
-            stmt1.setInt(1, selectedCustomer.getCustomerId());
+            stmt1.setInt(1, selectedCustomer.getCustomerID());
             // Execute the delete statement for the customer's appointments
             stmt1.executeUpdate();
             // Prepare the delete statement for the customer
             PreparedStatement stmt2 = JDBC.getConnection().prepareStatement("DELETE FROM customers WHERE customer_id = ?");
-            stmt2.setInt(1, selectedCustomer.getCustomerId());
+            stmt2.setInt(1, selectedCustomer.getCustomerID());
             // Execute the delete statement for the customer
             stmt2.executeUpdate();
             populateCustomerTable();
@@ -239,11 +239,11 @@ public class CustomerController implements Initializable {
 
             // Set cell values for the table columns
             customerIDColumn.setCellValueFactory(new PropertyValueFactory<>("customerID"));
-            customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+            customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
             addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
             postalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
             phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
-            firstLevelDivisionColumn.setCellValueFactory(new PropertyValueFactory<>("divisionID"));
+            firstLevelDivisionColumn.setCellValueFactory(new PropertyValueFactory<>("FirstLevelDivision"));
         } catch (SQLException e) {
             e.printStackTrace();
         }
