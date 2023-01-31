@@ -24,7 +24,8 @@
     </VBox>
     <TableView fx:id="customerTable" prefHeight="200" >
         <columns>
-            <TableColumn text="Name" fx:id="nameColumn" />
+            <TableColumn text="Customer ID" fx:id="customerIDColumn" />
+            <TableColumn text="Name" fx:id="customerNameColumn" />
             <TableColumn text="Address" fx:id="addressColumn" />
             <TableColumn text="Postal Code" fx:id="postalCodeColumn" />
             <TableColumn text="Phone" fx:id="phoneColumn" />

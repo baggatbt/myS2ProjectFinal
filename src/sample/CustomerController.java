@@ -12,7 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
-
+import javafx.scene.control.cell.PropertyValueFactory;
 
 
 public class CustomerController implements Initializable {
@@ -22,6 +22,13 @@ public class CustomerController implements Initializable {
     public Button updateCustomerButton;
     public Button addCustomerButton;
     public TextField phoneField;
+    public TableColumn customerIDColumn;
+    public TableColumn addressColumn;
+    public TableColumn postalCodeColumn;
+    public TableColumn phoneColumn;
+    public TableColumn countryColumn;
+    public TableColumn firstLevelDivisionColumn;
+    public TableColumn customerNameColumn;
     @FXML
     private TextField nameField;
     @FXML
@@ -209,9 +216,8 @@ public class CustomerController implements Initializable {
 
     private void populateCustomerTable() {
         try {
-
             // Prepare the select statement
-            PreparedStatement stmt = JDBC.getConnection().prepareStatement("SELECT * FROM customers,countries");
+            PreparedStatement stmt = JDBC.getConnection().prepareStatement("SELECT Customer_ID, Customer_Name, Address, Postal_Code, Phone, Division_ID FROM customers");
             // Execute the select statement
             ResultSet resultSet = stmt.executeQuery();
             // Clear the customer list
@@ -219,23 +225,30 @@ public class CustomerController implements Initializable {
             // Populate the customer list with data from the result set
             while (resultSet.next()) {
                 customerList.add(new Customer(
-                        resultSet.getInt("customer_id"),
-                        resultSet.getString("customer_name"),
-                        resultSet.getString("address"),
-                        resultSet.getString("postal_code"),
-                        resultSet.getString("phone"),
-                        resultSet.getString("Division_ID"),
-                        resultSet.getString("country")
+                        resultSet.getInt("Customer_ID"),
+                        resultSet.getString("Customer_Name"),
+                        resultSet.getString("Address"),
+                        resultSet.getString("Postal_Code"),
+                        resultSet.getString("Phone"),
+                        resultSet.getString("Division_ID")
                 ));
             }
             // Close the connection
-
             // Set the items of the customer table to the customer list
             customerTable.setItems(customerList);
+
+            // Set cell values for the table columns
+            customerIDColumn.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+            customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+            addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
+            postalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
+            phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
+            firstLevelDivisionColumn.setCellValueFactory(new PropertyValueFactory<>("divisionID"));
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 
 
 }
