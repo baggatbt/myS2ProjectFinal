@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-        <GridPane alignment="center" hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml" fx:controller="sample.AppointmentsController">
+        <GridPane prefWidth="1000" prefHeight="600"  xmlns:fx="http://javafx.com/fxml" fx:controller="sample.AppointmentsController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="400.0" />
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="10.0" />

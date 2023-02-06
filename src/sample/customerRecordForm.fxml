@@ -20,6 +20,7 @@
             <Button text="Add" fx:id="addCustomerButton" onAction="#addCustomer" />
             <Button text="Update" fx:id="updateCustomerButton" onAction="#updateCustomer" />
             <Button text="Delete" fx:id="deleteCustomerButton" onAction="#deleteCustomer"/>
+            <Button text="Go to Appointments" fx:id="goToAppointmentsButton" onAction="#goToAppointments" />
         </HBox>
     </VBox>
     <TableView fx:id="customerTable" prefHeight="200" >
