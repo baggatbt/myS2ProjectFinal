@@ -18,8 +18,8 @@
         <ComboBox fx:id="firstLevelDivisionComboBox" />
         <HBox spacing="10">
             <Button text="Add" fx:id="addCustomerButton" onAction="#addCustomer" />
-            <Button text="Update" fx:id="updateCustomerButton" />
-            <Button text="Delete" fx:id="deleteCustomerButton" />
+            <Button text="Update" fx:id="updateCustomerButton" onAction="#updateCustomer" />
+            <Button text="Delete" fx:id="deleteCustomerButton" onAction="#deleteCustomer"/>
         </HBox>
     </VBox>
     <TableView fx:id="customerTable" prefHeight="200" >

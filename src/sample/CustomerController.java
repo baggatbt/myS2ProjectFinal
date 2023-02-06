@@ -66,19 +66,31 @@ public class CustomerController implements Initializable {
     @FXML
     private void addCustomer() {
         try {
+            Connection connection = JDBC.getConnection();
+
+            Object selectedItem = firstLevelDivisionComboBox.getSelectionModel().getSelectedItem();
+            PreparedStatement statement = connection.prepareStatement("SELECT Division_ID FROM first_level_divisions WHERE Division = ?");
+            statement.setString(1, (String) selectedItem);
+            ResultSet result = statement.executeQuery();
+            result.next();
+            int divisionID = result.getInt("Division_ID");
 
             // Prepare the insert statement
             PreparedStatement stmt = JDBC.getConnection().prepareStatement("INSERT INTO customers (customer_name, address, postal_code, phone, Division_ID) VALUES (?, ?, ?, ?, ?)");
+
+            // Set the values for each column in the table
             stmt.setString(1, nameField.getText());
             stmt.setString(2, addressField.getText());
             stmt.setString(3, postalCodeField.getText());
             stmt.setString(4, phoneField.getText());
-            stmt.setString(5, firstLevelDivisionComboBox.getSelectionModel().getSelectedItem());
+            stmt.setInt(5, divisionID);
+
             // Execute the insert statement
             stmt.executeUpdate();
 
             // Clear the form fields
             clearForm();
+
             // Refresh the customer table
             populateCustomerTable();
         } catch (SQLException e) {
@@ -86,24 +98,33 @@ public class CustomerController implements Initializable {
         }
     }
 
+
     // Method to update an existing customer in the database
     @FXML
     private void updateCustomer() {
         try {
-
+            Connection connection = JDBC.getConnection();
             // Prepare the update statement
-            PreparedStatement stmt = JDBC.getConnection().prepareStatement("UPDATE customers SET customer_name = ?, address = ?, postal_code = ?, phone = ?, country = ?, Division_ID = ? WHERE customer_id = ?");
+            PreparedStatement stmt = JDBC.getConnection().prepareStatement("UPDATE customers SET customer_name = ?, address = ?, postal_code = ?, phone = ?, Division_ID = ? WHERE customer_id = ?");
+            // Set the values for each column in the table
+            Customer selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
+
             stmt.setString(1, nameField.getText());
             stmt.setString(2, addressField.getText());
             stmt.setString(3, postalCodeField.getText());
             stmt.setString(4, phoneField.getText());
-            stmt.setString(5, countryComboBox.getSelectionModel().getSelectedItem());
-            stmt.setString(6, firstLevelDivisionComboBox.getSelectionModel().getSelectedItem());
-            stmt.setInt(7, customerTable.getSelectionModel().getSelectedItem().getCustomerID());
+
+            Object selectedItem = firstLevelDivisionComboBox.getSelectionModel().getSelectedItem();
+            PreparedStatement statement = connection.prepareStatement("SELECT Division_ID FROM first_level_divisions WHERE Division = ?");
+            statement.setString(1, (String) selectedItem);
+            ResultSet result = statement.executeQuery();
+            result.next();
+            int divisionID = result.getInt("Division_ID");
+
+            stmt.setInt(5, divisionID);
+            stmt.setInt(6, selectedCustomer.getCustomerID());
             // Execute the update statement
             stmt.executeUpdate();
-
-
             // Clear the form fields
             clearForm();
             // Refresh the customer table
