@@ -1,124 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
+<!-- AppointmentsController.fxml -->
 
-        <GridPane prefWidth="1000" prefHeight="600"  xmlns:fx="http://javafx.com/fxml" fx:controller="sample.AppointmentsController">
-    <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="400.0" />
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="10.0" />
-    </columnConstraints>
-    <rowConstraints>
-        <RowConstraints minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    </rowConstraints>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.AppointmentsController">
     <children>
-        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
-            <children>
-                <AnchorPane prefHeight="50.0" prefWidth="200.0">
-                    <children>
-                        <Label fx:id="appointmentSummaryLabel" layoutX="259.0" layoutY="14.0"  text="Appointment Summary" />
-                    </children>
-                </AnchorPane>
-                <TableView fx:id="appointmentSummaryTableview" prefHeight="225.0" prefWidth="500.0">
-                    <columns>
-                        <TableColumn fx:id="DateTableColumn" prefWidth="120.0" text="Date" />
-                        <TableColumn fx:id="TitleTableColumn" prefWidth="233.0" text="Title" />
-                        <TableColumn fx:id="ContactTableColumn" prefWidth="161.0" text="Contact" />
-                    </columns>
-                    <VBox.margin>
-                        <Insets left="20.0" right="10.0" />
-                    </VBox.margin>
-                </TableView>
-            </children>
-        </VBox>
-        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" GridPane.columnIndex="1">
-            <children>
-                <Button fx:id="DetailsButton" mnemonicParsing="false" text="Appointment Details" />
-                <Button fx:id="ModifyAppointmentButton" mnemonicParsing="false" text="Modify Appointment" />
-                <Button fx:id="DeleteAppointmentButton" mnemonicParsing="false" text="Delete Appointment" />
-            </children>
-            <GridPane.margin>
-                <Insets top="50.0" />
-            </GridPane.margin>
-        </VBox>
-        <VBox prefHeight="200.0" prefWidth="300.0" spacing="0.5" GridPane.rowIndex="1">
-            <children>
-                <HBox prefHeight="100.0" prefWidth="200.0" spacing="64.0">
-                    <children>
-                        <Label fx:id="TitleLabel" text="Title:" />
-                        <Label fx:id="DetailTitleLabel" />
-                    </children>
-                </HBox>
-                <HBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
-                    <children>
-                        <Label fx:id="DescLabel" text="Description:" />
-                        <Label fx:id="DetailDescLabel" />
-                    </children>
-                </HBox>
-                <HBox layoutX="10.0" layoutY="214.0" prefHeight="100.0" prefWidth="200.0" spacing="38.0">
-                    <children>
-                        <Label fx:id="LocationLabel" text="Location:" />
-                        <Label fx:id="DetailLocationLabel" />
-                    </children>
-                </HBox>
-                <HBox layoutX="10.0" layoutY="218.0" prefHeight="100.0" prefWidth="200.0" spacing="42.0">
-                    <children>
-                        <Label fx:id="ContactLabel" text="Contact:" />
-                        <Label fx:id="DetailContactLabel" />
-                    </children>
-                </HBox>
-                <HBox layoutX="10.0" layoutY="223.0" prefHeight="100.0" prefWidth="200.0" spacing="66.0">
-                    <children>
-                        <Label fx:id="UrlLabel" text="URL:" />
-                        <Label fx:id="DetailUrlLabel" />
-                    </children>
-                </HBox>
-                <HBox layoutX="10.0" layoutY="228.0" prefHeight="100.0" prefWidth="200.0" spacing="63.0">
-                    <children>
-                        <Label fx:id="DateLabel" text="Date:" />
-                        <Label fx:id="DetailDateLabel" />
-                    </children>
-                </HBox>
-                <HBox layoutX="10.0" layoutY="233.0" prefHeight="100.0" prefWidth="200.0" spacing="28.0">
-                    <children>
-                        <Label fx:id="StartLabel" text="Start Time:" />
-                        <Label fx:id="DetailStartLabel" />
-                    </children>
-                </HBox>
-                <HBox layoutX="10.0" layoutY="238.0" prefHeight="100.0" prefWidth="200.0" spacing="34.0">
-                    <children>
-                        <Label fx:id="EndLabel" text="End Time:" />
-                        <Label fx:id="DetailEndLabel" />
-                    </children>
-                </HBox>
-                <HBox layoutX="10.0" layoutY="243.0" prefHeight="100.0" prefWidth="200.0" spacing="23.0">
-                    <children>
-                        <Label fx:id="CreatedByLabel" text="Created By:" />
-                        <Label fx:id="DetailCreatedByLabel" />
-                    </children>
-                </HBox>
-            </children>
-            <padding>
-                <Insets left="20.0" />
-            </padding>
-        </VBox>
-        <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-            <children>
-                <Button fx:id="AppointmentExitButton" alignment="BOTTOM_CENTER" mnemonicParsing="false" prefWidth="140.0" text="Exit" />
-            </children>
-            <GridPane.margin>
-                <Insets bottom="15.0" />
-            </GridPane.margin>
-        </VBox>
+        <TabPane layoutX="20.0" layoutY="20.0" prefHeight="560.0" prefWidth="760.0" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab text="Add Appointment">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <Label layoutX="20.0" layoutY="20.0" text="Appointment ID:" />
+                                <Label layoutX="20.0" layoutY="50.0" text="Title:" />
+                                <Label layoutX="20.0" layoutY="80.0" text="Description:" />
+                                <Label layoutX="20.0" layoutY="110.0" text="Location:" />
+                                <Label layoutX="20.0" layoutY="140.0" text="Contact:" />
+                                <Label layoutX="20.0" layoutY="170.0" text="Type:" />
+                                <Label layoutX="20.0" layoutY="200.0" text="Start Date and Time:" />
+                                <Label layoutX="20.0" layoutY="230.0" text="End Date and Time:" />
+                                <Label layoutX="20.0" layoutY="260.0" text="Customer ID:" />
+                                <Label layoutX="20.0" layoutY="290.0" text="User ID:" />
+                                <TextField fx:id="appointmentIdTextField" layoutX="140.0" layoutY="20.0" editable="false" />
+                                <TextField fx:id="titleTextField" layoutX="140.0" layoutY="50.0" />
+                                <TextField fx:id="descriptionTextField" layoutX="140.0" layoutY="80.0" />
+                                <TextField fx:id="locationTextField" layoutX="140.0" layoutY="110.0" />
+                                <ComboBox fx:id="contactComboBox" layoutX="140.0" layoutY="140.0" />
+                                <ComboBox fx:id="typeComboBox" layoutX="140.0" layoutY="170.0" />
+                                <DatePicker fx:id="startDatePicker" layoutX="140.0" layoutY="200.0" />
+                                <DatePicker fx:id="endDatePicker" layoutX="140.0" layoutY="230.0" />
+                                <TextField fx:id="customerIdTextField" layoutX="140.0" layoutY="260.0" />
+                                <TextField fx:id="userIdTextField" layoutX="140.0" layoutY="290.0" />
+                                <Button layoutX="120.0" layoutY="320.0" mnemonicParsing="false" text="Save" />
+                                <Button layoutX="180.0" layoutY="320.0" mnemonicParsing="false" text="Cancel" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="View Appointments">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <TableView fx:id="appointmentsTableView" layoutX="20.0" layoutY="20.0" prefHeight="520.0" prefWidth="720.0">
+                                    <columns>
+                                        <TableColumn fx:id="appointmentIdColumn" prefWidth="75.0" text="Appointment ID" />
+                                        <TableColumn fx:id="titleColumn" prefWidth="100.0" text="Title" />
+                                        <TableColumn fx:id="descriptionColumn" prefWidth="100.0" text="Description" />
+                                        <TableColumn fx:id="locationColumn" prefWidth="100.0" text="Location" />
+                                        <TableColumn fx:id="contactColumn" prefWidth="75.0" text="Contact" />
+                                        <TableColumn fx:id="typeColumn" prefWidth="75.0" text="Type" />
+                                        <TableColumn fx:id="startDateColumn" prefWidth="100.0" text="Start Date" />
+                                        <TableColumn fx:id="endDateColumn" prefWidth="100.0" text="End Date" />
+                                        <TableColumn fx:id="customerIdColumn" prefWidth="75.0" text="Customer ID" />
+                                        <TableColumn fx:id="userIdColumn" prefWidth="75.0" text="User ID" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
     </children>
-</GridPane>
+</AnchorPane>
+
+
+
+
+
+
+
