@@ -14,6 +14,9 @@ public class Appointment {
     private int customerID;
     private int userID;
 
+    public Appointment(int appointmentId, String title, String description, String location, String contact, String type, LocalDateTime start, LocalDateTime end, int customerId, int userId) {
+    }
+
     // Getter methods
     public int getAppointmentID() {
         return appointmentID;
