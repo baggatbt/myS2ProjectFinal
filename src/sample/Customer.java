@@ -7,7 +7,7 @@ public class Customer {
     private String postal_code;
     private String phone;
     private String first_level_division;
-    private String country;
+
 
     public Customer(int customerID, String name, String address, String postal_code, String phone, String first_level_division) {
         this.customerID = customerID;
