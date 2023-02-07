@@ -7,14 +7,24 @@ public class Appointment {
     private String title;
     private String description;
     private String location;
-    private String contactID;
+    private int contactID;
     private String type;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private int customerID;
     private int userID;
 
-    public Appointment(int appointmentId, String title, String description, String location, String contact, String type, LocalDateTime start, LocalDateTime end, int customerId, int userId) {
+    public Appointment(int appointmentID, String title, String description, String location, int contact, String type, LocalDateTime start, LocalDateTime end, int customerId, int userId) {
+    this.appointmentID = appointmentID;
+    this.title = title;
+    this.description = description;
+    this.location = location;
+    this.contactID = contact;
+    this.type = type;
+    this.startDateTime = start;
+    this.endDateTime = end;
+    this.customerID = customerId;
+    this.userID = userId;
     }
 
     // Getter methods
@@ -34,7 +44,7 @@ public class Appointment {
         return location;
     }
 
-    public String getContactID() {
+    public int getContactID() {
         return contactID;
     }
 
@@ -75,7 +85,7 @@ public class Appointment {
         this.location = location;
     }
 
-    public void setContactID(String contact) {
+    public void setContactID(int contact) {
         this.contactID = contact;
     }
 

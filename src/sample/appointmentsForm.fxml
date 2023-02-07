@@ -40,8 +40,8 @@
                                 <DatePicker fx:id="endDatePicker" layoutX="140.0" layoutY="230.0" />
                                 <TextField fx:id="customerIdTextField" layoutX="140.0" layoutY="260.0" />
                                 <TextField fx:id="userIdTextField" layoutX="140.0" layoutY="290.0" />
-                                <Button layoutX="120.0" layoutY="320.0" mnemonicParsing="false" text="Save" />
-                                <Button layoutX="180.0" layoutY="320.0" mnemonicParsing="false" text="Cancel" />
+                                <Button layoutX="120.0" layoutY="320.0" mnemonicParsing="false" text="Save" fx:id="saveApptButton" />
+                                <Button layoutX="180.0" layoutY="320.0" mnemonicParsing="false" text="Cancel" fx:id="cancelButton" />
                             </children>
                         </AnchorPane>
                     </content>
