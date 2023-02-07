@@ -14,7 +14,10 @@ public class Appointment {
     private int customerID;
     private int userID;
 
-    public Appointment(int appointmentID, String title, String description, String location, int contact, String type, LocalDateTime start, LocalDateTime end, int customerId, int userId) {
+    public Appointment(int appointmentID,
+                       String title, String description, String location,
+                       int contact, String type, LocalDateTime start,
+                       LocalDateTime end, int customerID, int userID) {
     this.appointmentID = appointmentID;
     this.title = title;
     this.description = description;
@@ -23,8 +26,8 @@ public class Appointment {
     this.type = type;
     this.startDateTime = start;
     this.endDateTime = end;
-    this.customerID = customerId;
-    this.userID = userId;
+    this.customerID = customerID;
+    this.userID = userID;
     }
 
     // Getter methods

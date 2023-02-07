@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- AppointmentsController.fxml -->
-
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.Tab?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ComboBox?>
@@ -12,70 +9,51 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.AppointmentsController">
-    <children>
-        <TabPane layoutX="20.0" layoutY="20.0" prefHeight="560.0" prefWidth="760.0" tabClosingPolicy="UNAVAILABLE">
-            <tabs>
-                <Tab text="Add Appointment">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                            <children>
-                                <Label layoutX="20.0" layoutY="20.0" text="Appointment ID:" />
-                                <Label layoutX="20.0" layoutY="50.0" text="Title:" />
-                                <Label layoutX="20.0" layoutY="80.0" text="Description:" />
-                                <Label layoutX="20.0" layoutY="110.0" text="Location:" />
-                                <Label layoutX="20.0" layoutY="140.0" text="Contact:" />
-                                <Label layoutX="20.0" layoutY="170.0" text="Type:" />
-                                <Label layoutX="20.0" layoutY="200.0" text="Start Date and Time:" />
-                                <Label layoutX="20.0" layoutY="230.0" text="End Date and Time:" />
-                                <Label layoutX="20.0" layoutY="260.0" text="Customer ID:" />
-                                <Label layoutX="20.0" layoutY="290.0" text="User ID:" />
-                                <TextField fx:id="appointmentIdTextField" layoutX="140.0" layoutY="20.0" editable="false" />
-                                <TextField fx:id="titleTextField" layoutX="140.0" layoutY="50.0" />
-                                <TextField fx:id="descriptionTextField" layoutX="140.0" layoutY="80.0" />
-                                <TextField fx:id="locationTextField" layoutX="140.0" layoutY="110.0" />
-                                <ComboBox fx:id="contactComboBox" layoutX="140.0" layoutY="140.0" />
-                                <ComboBox fx:id="typeComboBox" layoutX="140.0" layoutY="170.0" />
-                                <DatePicker fx:id="startDatePicker" layoutX="140.0" layoutY="200.0" />
-                                <DatePicker fx:id="endDatePicker" layoutX="140.0" layoutY="230.0" />
-                                <TextField fx:id="customerIdTextField" layoutX="140.0" layoutY="260.0" />
-                                <TextField fx:id="userIdTextField" layoutX="140.0" layoutY="290.0" />
-                                <Button layoutX="120.0" layoutY="320.0" mnemonicParsing="false" text="Save" fx:id="saveApptButton" />
-                                <Button layoutX="180.0" layoutY="320.0" mnemonicParsing="false" text="Cancel" fx:id="cancelButton" />
-                            </children>
-                        </AnchorPane>
-                    </content>
-                </Tab>
-                <Tab text="View Appointments">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                            <children>
-                                <TableView fx:id="appointmentsTableView" layoutX="20.0" layoutY="20.0" prefHeight="520.0" prefWidth="720.0">
-                                    <columns>
-                                        <TableColumn fx:id="appointmentIdColumn" prefWidth="75.0" text="Appointment ID" />
-                                        <TableColumn fx:id="titleColumn" prefWidth="100.0" text="Title" />
-                                        <TableColumn fx:id="descriptionColumn" prefWidth="100.0" text="Description" />
-                                        <TableColumn fx:id="locationColumn" prefWidth="100.0" text="Location" />
-                                        <TableColumn fx:id="contactColumn" prefWidth="75.0" text="Contact" />
-                                        <TableColumn fx:id="typeColumn" prefWidth="75.0" text="Type" />
-                                        <TableColumn fx:id="startDateColumn" prefWidth="100.0" text="Start Date" />
-                                        <TableColumn fx:id="endDateColumn" prefWidth="100.0" text="End Date" />
-                                        <TableColumn fx:id="customerIdColumn" prefWidth="75.0" text="Customer ID" />
-                                        <TableColumn fx:id="userIdColumn" prefWidth="75.0" text="User ID" />
-                                    </columns>
-                                </TableView>
-                            </children>
-                        </AnchorPane>
-                    </content>
-                </Tab>
-            </tabs>
-        </TabPane>
-    </children>
-</AnchorPane>
 
-
-
-
-
-
-
+<?import javafx.scene.layout.HBox?>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="sample.AppointmentsController" prefWidth="1000" prefHeight="1000">
+    <HBox spacing="10">
+        <VBox spacing="19">
+            <Label text="Appointment ID:" />
+            <Label text="Title:" />
+            <Label text="Description:" />
+            <Label text="Location:" />
+            <Label text="Contact:" />
+            <Label text="Type:" />
+            <Label text="Start Date and Time:" />
+            <Label text="End Date and Time:" />
+            <Label text="Customer ID:" />
+            <Label text="User ID:" />
+        </VBox>
+        <VBox spacing="10">
+            <TextField fx:id="appointmentIdTextField" editable="false" />
+            <TextField fx:id="titleTextField" />
+            <TextField fx:id="descriptionTextField" />
+            <TextField fx:id="locationTextField" />
+            <ComboBox fx:id="contactComboBox" />
+            <ComboBox fx:id="typeComboBox" />
+            <DatePicker fx:id="startDatePicker" />
+            <DatePicker fx:id="endDatePicker" />
+            <TextField fx:id="customerIdTextField" />
+            <TextField fx:id="userIdTextField" />
+        </VBox>
+    </HBox>
+    <HBox spacing="10">
+        <Button text="Save" fx:id="saveApptButton" />
+        <Button text="Cancel" fx:id="cancelButton" />
+    </HBox>
+    <TableView fx:id="appointmentsTableView" prefHeight="300" prefWidth="1200">
+        <columns>
+            <TableColumn fx:id="appointmentIdColumn" text="Appointment ID" />
+            <TableColumn fx:id="titleColumn" text="Title" />
+            <TableColumn fx:id="descriptionColumn" text="Description" />
+            <TableColumn fx:id="locationColumn" text="Location" />
+            <TableColumn fx:id="contactColumn" text="Contact" />
+            <TableColumn fx:id="typeColumn" text="Type" />
+            <TableColumn fx:id="startDateColumn" text="Start Date" />
+            <TableColumn fx:id="endDateColumn" text="End Date" />
+            <TableColumn fx:id="customerIdColumn" text="Customer ID" />
+            <TableColumn fx:id="userIdColumn" text="User ID" />
+        </columns>
+    </TableView>
+</VBox>

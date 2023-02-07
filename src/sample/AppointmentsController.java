@@ -99,8 +99,8 @@ public class AppointmentsController implements Initializable {
             typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
             startDateColumn.setCellValueFactory(new PropertyValueFactory<>("startDateTime"));
             endDateColumn.setCellValueFactory(new PropertyValueFactory<>("endDateTime"));
-            customerIdColumn.setCellValueFactory(new PropertyValueFactory<>("customerId"));
-            userIdColumn.setCellValueFactory(new PropertyValueFactory<>("userId"));
+            customerIdColumn.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+            userIdColumn.setCellValueFactory(new PropertyValueFactory<>("userID"));
         } catch (SQLException e) {
             e.printStackTrace();
         }
