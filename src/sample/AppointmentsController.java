@@ -110,6 +110,3 @@ public class AppointmentsController implements Initializable {
 
 
 }
-
-
-
