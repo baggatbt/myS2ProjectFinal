@@ -39,7 +39,7 @@
         </VBox>
     </HBox>
     <HBox spacing="10">
-        <Button text="Save" fx:id="saveApptButton" />
+        <Button text="Save" fx:id="saveApptButton" onAction="#addAppointment" />
         <Button text="Cancel" fx:id="cancelButton" />
     </HBox>
     <TableView fx:id="appointmentsTableView" prefHeight="300" prefWidth="1200">
