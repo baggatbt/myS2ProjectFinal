@@ -2,6 +2,8 @@ package sample;
 
 import java.net.URL;
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -73,6 +75,9 @@ public class AppointmentsController implements Initializable {
             PreparedStatement stmt = JDBC.getConnection().prepareStatement("SELECT Appointment_ID, Title, Description, Location, Contact_ID, Type, Start, End, Customer_ID, User_ID FROM appointments");
             // Execute the select statement
             ResultSet resultSet = stmt.executeQuery();
+
+            PreparedStatement stmt2 = JDBC.getConnection().prepareStatement("SELECT Start FROM appointments");
+            ResultSet resultSet2 = stmt.executeQuery();
             // Clear the customer list
             appointmentList.clear();
             // Populate the customer list with data from the result set
@@ -147,53 +152,48 @@ public class AppointmentsController implements Initializable {
 
     @FXML
     private void addAppointment() {
-        try {
-            Connection connection = JDBC.getConnection();
+        try (Connection connection = JDBC.getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT Type FROM appointments WHERE Type = ?");
+
+             PreparedStatement stmt = JDBC.getConnection().prepareStatement("INSERT INTO appointments(Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
 
             Object selectedItem = typeComboBox.getSelectionModel().getSelectedItem();
-            PreparedStatement statement = connection.prepareStatement("SELECT Type FROM appointments WHERE Type = ?");
             statement.setString(1, (String) selectedItem);
             ResultSet result = statement.executeQuery();
+            result.next();
             String type = result.getString("Type");
 
             Object selectedItem2 = contactComboBox.getSelectionModel().getSelectedItem();
-            PreparedStatement statement2 = connection.prepareStatement("SELECT Contact_Name FROM contacts WHERE Contact_Name = ?");
-            statement.setString(1, (String) selectedItem);
-            ResultSet result2 = statement.executeQuery();
-            String contactName = result.getString("Contact");
+            PreparedStatement statement2 = connection.prepareStatement("SELECT Contact_ID FROM contacts WHERE Contact_Name = ?");
+            statement2.setString(1, (String) selectedItem2);
+            ResultSet result2 = statement2.executeQuery();
+            result2.next();
+            int contactID = result2.getInt("Contact_ID");
 
-            java.sql.Date sqlStartDate = java.sql.Date.valueOf(String.valueOf(startDatePicker));
-            java.sql.Date sqlEndDate = java.sql.Date.valueOf(String.valueOf(endDatePicker));
+            LocalDate selectedStartDate = startDatePicker.getValue();
+            LocalDate selectedEndDate = endDatePicker.getValue();
+            LocalDateTime startDateTime = LocalDateTime.of(selectedStartDate, LocalTime.MIN);
+            LocalDateTime endDateTime = LocalDateTime.of(selectedEndDate, LocalTime.MAX);
 
-
-            // Prepare the insert statement
-            PreparedStatement stmt = JDBC.getConnection().prepareStatement("INSERT INTO appointments(Title, Description, Location, Type, Start, End, Customer_ID, User_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-
-            // Set the values for each column in the table
             stmt.setString(1, titleTextField.getText());
             stmt.setString(2, descriptionTextField.getText());
             stmt.setString(3, locationTextField.getText());
             stmt.setString(4, type);
-            stmt.setDate(5, sqlStartDate);
-            stmt.setDate(6, sqlEndDate);
+            stmt.setTimestamp(5, Timestamp.valueOf(startDateTime));
+            stmt.setTimestamp(6, Timestamp.valueOf(endDateTime));
             stmt.setString(7, customerIdTextField.getText());
             stmt.setString( 8, userIdTextField.getText());
+            stmt.setInt(9, contactID);
 
-            // Execute the insert statement
+
             stmt.executeUpdate();
-
             clearForm();
-
-
-            // Refresh the table
             retrieveAppointmentsFromDB();
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
 
-
-        }
     private void clearForm() {
         titleTextField.clear();
         descriptionTextField.clear();

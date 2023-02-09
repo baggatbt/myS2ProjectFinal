@@ -48,7 +48,7 @@
             <TableColumn fx:id="titleColumn" text="Title" />
             <TableColumn fx:id="descriptionColumn" text="Description" />
             <TableColumn fx:id="locationColumn" text="Location" />
-            <TableColumn fx:id="contactColumn" text="Contact" />
+            <TableColumn fx:id="contactColumn" text="Contact_ID" />
             <TableColumn fx:id="typeColumn" text="Type" />
             <TableColumn fx:id="startDateColumn" text="Start Date" />
             <TableColumn fx:id="endDateColumn" text="End Date" />
