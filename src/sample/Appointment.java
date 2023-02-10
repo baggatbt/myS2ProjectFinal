@@ -1,5 +1,6 @@
 package sample;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public class Appointment {
@@ -9,15 +10,15 @@ public class Appointment {
     private String location;
     private int contactID;
     private String type;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
+    private Timestamp startDateTime;
+    private Timestamp endDateTime;
     private int customerID;
     private int userID;
 
     public Appointment(int appointmentID,
                        String title, String description, String location,
-                       int contact, String type, LocalDateTime start,
-                       LocalDateTime end, int customerID, int userID) {
+                       int contact, String type, Timestamp start,
+                       Timestamp end, int customerID, int userID) {
     this.appointmentID = appointmentID;
     this.title = title;
     this.description = description;
@@ -55,11 +56,11 @@ public class Appointment {
         return type;
     }
 
-    public LocalDateTime getStartDateTime() {
+    public Timestamp getStartDateTime() {
         return startDateTime;
     }
 
-    public LocalDateTime getEndDateTime() {
+    public Timestamp getEndDateTime() {
         return endDateTime;
     }
 
@@ -96,11 +97,11 @@ public class Appointment {
         this.type = type;
     }
 
-    public void setStartDateTime(LocalDateTime startDateTime) {
+    public void setStartDateTime(Timestamp startDateTime) {
         this.startDateTime = startDateTime;
     }
 
-    public void setEndDateTime(LocalDateTime endDateTime) {
+    public void setEndDateTime(Timestamp endDateTime) {
         this.endDateTime = endDateTime;
     }
 

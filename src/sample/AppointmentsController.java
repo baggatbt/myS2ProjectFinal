@@ -77,7 +77,7 @@ public class AppointmentsController implements Initializable {
             ResultSet resultSet = stmt.executeQuery();
 
             PreparedStatement stmt2 = JDBC.getConnection().prepareStatement("SELECT Start FROM appointments");
-            ResultSet resultSet2 = stmt.executeQuery();
+            ResultSet resultSet2 = stmt2.executeQuery();
             // Clear the customer list
             appointmentList.clear();
             // Populate the customer list with data from the result set
@@ -89,8 +89,8 @@ public class AppointmentsController implements Initializable {
                         resultSet.getString("Location"),
                         resultSet.getInt("Contact_ID"),
                         resultSet.getString("Type"),
-                        resultSet.getTimestamp("Start").toLocalDateTime(),
-                        resultSet.getTimestamp("End").toLocalDateTime(),
+                        resultSet.getTimestamp("Start"),
+                        resultSet.getTimestamp("End"),
                         resultSet.getInt("Customer_ID"),
                         resultSet.getInt("User_ID")
                 ));
