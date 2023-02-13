@@ -44,6 +44,8 @@
     <HBox spacing="10">
         <Button text="Save" fx:id="saveApptButton" onAction="#addAppointment" />
         <Button text="Cancel" fx:id="cancelButton" />
+        <Button text="Delete" fx:id="deleteButton" onAction="#deleteAppointment"/>
+        <Button text="Update" fx:id="updateButton" onAction="#updateAppointment"/>
     </HBox>
     <TableView fx:id="appointmentsTableView" prefHeight="300" prefWidth="1200">
         <columns>
