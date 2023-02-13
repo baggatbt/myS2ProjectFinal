@@ -36,6 +36,8 @@ public class AppointmentsController implements Initializable {
     public TableColumn endDateColumn;
     public TableColumn customerIdColumn;
     public TableColumn userIdColumn;
+    public ComboBox startTimePicker;
+    public ComboBox endTimePicker;
     @FXML
     private TextField appointmentIdTextField;
     @FXML
@@ -65,6 +67,8 @@ public class AppointmentsController implements Initializable {
         appointmentIdTextField.setEditable(false);
         populateTypeComboBox();
         populateContactComboBox();
+        populateTimePicker(startTimePicker);
+        populateTimePicker(endTimePicker);
         retrieveAppointmentsFromDB();
 
     }
@@ -154,45 +158,54 @@ public class AppointmentsController implements Initializable {
     private void addAppointment() {
         try (Connection connection = JDBC.getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT Type FROM appointments WHERE Type = ?");
-
-             PreparedStatement stmt = JDBC.getConnection().prepareStatement("INSERT INTO appointments(Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
-
+             PreparedStatement stmt = connection.prepareStatement("INSERT INTO appointments(Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+            String title = titleTextField.getText();
+            String description = descriptionTextField.getText();
+            String location = locationTextField.getText();
             Object selectedItem = typeComboBox.getSelectionModel().getSelectedItem();
             statement.setString(1, (String) selectedItem);
             ResultSet result = statement.executeQuery();
             result.next();
             String type = result.getString("Type");
-
             Object selectedItem2 = contactComboBox.getSelectionModel().getSelectedItem();
             PreparedStatement statement2 = connection.prepareStatement("SELECT Contact_ID FROM contacts WHERE Contact_Name = ?");
             statement2.setString(1, (String) selectedItem2);
             ResultSet result2 = statement2.executeQuery();
             result2.next();
             int contactID = result2.getInt("Contact_ID");
+            int customerID = Integer.parseInt(customerIdTextField.getText());
+            int userID = Integer.parseInt(userIdTextField.getText());
 
-            LocalDate selectedStartDate = startDatePicker.getValue();
-            LocalDate selectedEndDate = endDatePicker.getValue();
-            LocalDateTime startDateTime = LocalDateTime.of(selectedStartDate, LocalTime.MIN);
-            LocalDateTime endDateTime = LocalDateTime.of(selectedEndDate, LocalTime.MAX);
+            // Concatenate start date and time into one variable
+            LocalDate startDate = startDatePicker.getValue();
+            LocalTime startTime = LocalTime.parse((String) startTimePicker.getSelectionModel().getSelectedItem(), DateTimeFormatter.ofPattern("hh:mm a"));
+            LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
 
-            stmt.setString(1, titleTextField.getText());
-            stmt.setString(2, descriptionTextField.getText());
-            stmt.setString(3, locationTextField.getText());
+            LocalDate endDate = endDatePicker.getValue();
+            LocalTime endTime = LocalTime.parse((String) endTimePicker.getSelectionModel().getSelectedItem(), DateTimeFormatter.ofPattern("hh:mm a"));
+            LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
+
+            // Set parameter values for the insert statement
+            stmt.setString(1, title);
+            stmt.setString(2, description);
+            stmt.setString(3, location);
             stmt.setString(4, type);
             stmt.setTimestamp(5, Timestamp.valueOf(startDateTime));
             stmt.setTimestamp(6, Timestamp.valueOf(endDateTime));
-            stmt.setString(7, customerIdTextField.getText());
-            stmt.setString( 8, userIdTextField.getText());
+            stmt.setInt(7, customerID);
+            stmt.setInt(8, userID);
             stmt.setInt(9, contactID);
 
-
+            // Execute the insert statement
             stmt.executeUpdate();
-            clearForm();
+
+            // Refresh the appointment table view
             retrieveAppointmentsFromDB();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 
     private void clearForm() {
         titleTextField.clear();
@@ -206,6 +219,12 @@ public class AppointmentsController implements Initializable {
         endDatePicker.setValue(null);
     }
 
+    public static void populateTimePicker(ComboBox<String> timePicker) {
+        timePicker.getItems().addAll(
+                "12:00 AM", "01:00 AM", "02:00 AM", "03:00 AM", "04:00 AM", "05:00 AM", "06:00 AM", "07:00 AM", "08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM",
+                "12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM", "07:00 PM", "08:00 PM", "09:00 PM", "10:00 PM", "11:00 PM"
+        );
+    }
 
 
 
