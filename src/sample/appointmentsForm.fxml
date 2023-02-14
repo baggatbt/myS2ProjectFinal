@@ -1,14 +1,18 @@
-<?import javafx.scene.layout.HBox?>
+<?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="sample.AppointmentsController" prefWidth="1000" prefHeight="1000">
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="1000" prefWidth="1000" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17" fx:controller="sample.AppointmentsController">
     <HBox spacing="10">
         <VBox spacing="19">
             <Label text="Appointment ID:" />
@@ -31,7 +35,7 @@
             <ComboBox fx:id="typeComboBox" />
             <HBox spacing="10">
                 <DatePicker fx:id="startDatePicker" />
-                <ComboBox fx:id="startTimePicker"/>
+                <ComboBox fx:id="startTimePicker" />
             </HBox>
             <HBox spacing="10">
                 <DatePicker fx:id="endDatePicker" />
@@ -42,24 +46,73 @@
         </VBox>
     </HBox>
     <HBox spacing="10">
-        <Button text="Save" fx:id="saveApptButton" onAction="#addAppointment" />
-        <Button text="Cancel" fx:id="cancelButton" />
-        <Button text="Delete" fx:id="deleteButton" onAction="#deleteAppointment"/>
-        <Button text="Update" fx:id="updateButton" onAction="#updateAppointment"/>
-    </HBox>
-    <TableView fx:id="appointmentsTableView" prefHeight="300" prefWidth="1200">
-        <columns>
-            <TableColumn fx:id="appointmentIdColumn" text="Appointment ID" />
-            <TableColumn fx:id="titleColumn" text="Title" />
-            <TableColumn fx:id="descriptionColumn" text="Description" />
-            <TableColumn fx:id="locationColumn" text="Location" />
-            <TableColumn fx:id="contactColumn" text="Contact_ID" />
-            <TableColumn fx:id="typeColumn" text="Type" />
-            <TableColumn fx:id="startDateColumn" text="Start Date" />
-            <TableColumn fx:id="endDateColumn" text="End Date" />
-            <TableColumn fx:id="customerIdColumn" text="Customer ID" />
-            <TableColumn fx:id="userIdColumn" text="User ID" />
-        </columns>
-    </TableView>
-</VBox>
+        <Button fx:id="saveApptButton" onAction="#addAppointment" text="Save" />
+        <Button fx:id="cancelButton" text="Cancel" />
+        <Button fx:id="deleteButton" onAction="#deleteAppointment" text="Delete" />
+        <Button fx:id="updateButton" onAction="#updateAppointment" text="Update" />
 
+
+
+    </HBox>
+   <TabPane>
+      <tabs>
+         <Tab id="allAppointmentsTab" text="All Appointments">
+            <content>
+            
+                               <TableView fx:id="appointmentsTableView" prefHeight="300" prefWidth="1200">
+                    <columns>
+                        <TableColumn fx:id="appointmentIdColumn" text="Appointment ID" />
+                        <TableColumn fx:id="titleColumn" text="Title" />
+                        <TableColumn fx:id="descriptionColumn" text="Description" />
+                        <TableColumn fx:id="locationColumn" text="Location" />
+                        <TableColumn fx:id="contactColumn" text="Contact_ID" />
+                        <TableColumn fx:id="typeColumn" text="Type" />
+                        <TableColumn fx:id="startDateColumn" text="Start Date" />
+                        <TableColumn fx:id="endDateColumn" text="End Date" />
+                        <TableColumn fx:id="customerIdColumn" text="Customer ID" />
+                        <TableColumn fx:id="userIdColumn" text="User ID" />
+                    </columns>
+                </TableView>
+            </content>
+         </Tab>
+         <Tab id="appointmentsByMonthTab" text="Appointments By Month">
+            <content>
+               <TableView fx:id="appointmentsTableView1" prefHeight="300" prefWidth="1200">
+                  <columns>
+                     <TableColumn fx:id="appointmentIdColumn1" text="Appointment ID" />
+                     <TableColumn fx:id="titleColumn1" text="Title" />
+                     <TableColumn fx:id="descriptionColumn1" text="Description" />
+                     <TableColumn fx:id="locationColumn1" text="Location" />
+                     <TableColumn fx:id="contactColumn1" text="Contact_ID" />
+                     <TableColumn fx:id="typeColumn1" text="Type" />
+                     <TableColumn fx:id="startDateColumn1" text="Start Date" />
+                     <TableColumn fx:id="endDateColumn1" text="End Date" />
+                     <TableColumn fx:id="customerIdColumn1" text="Customer ID" />
+                     <TableColumn fx:id="userIdColumn1" text="User ID" />
+                  </columns>
+               </TableView>
+            </content>
+         </Tab>
+         <Tab id="appointmentsByWeekTab" text="Appointments By Week">
+            <content>
+               <TableView fx:id="appointmentsTableView2" prefHeight="300" prefWidth="1200">
+                  <columns>
+                     <TableColumn fx:id="appointmentIdColumn2" text="Appointment ID" />
+                     <TableColumn fx:id="titleColumn2" text="Title" />
+                     <TableColumn fx:id="descriptionColumn2" text="Description" />
+                     <TableColumn fx:id="locationColumn2" text="Location" />
+                     <TableColumn fx:id="contactColumn2" text="Contact_ID" />
+                     <TableColumn fx:id="typeColumn2" text="Type" />
+                     <TableColumn fx:id="startDateColumn2" text="Start Date" />
+                     <TableColumn fx:id="endDateColumn2" text="End Date" />
+                     <TableColumn fx:id="customerIdColumn2" text="Customer ID" />
+                     <TableColumn fx:id="userIdColumn2" text="User ID" />
+                  </columns>
+               </TableView>
+            </content>
+         </Tab>
+      </tabs>
+   </TabPane>
+
+
+</VBox>
