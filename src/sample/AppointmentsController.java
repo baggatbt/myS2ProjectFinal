@@ -10,6 +10,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -227,75 +228,92 @@ public class AppointmentsController implements Initializable {
                 "12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM", "07:00 PM", "08:00 PM", "09:00 PM", "10:00 PM", "11:00 PM"
         );
     }
+
     @FXML
     private void deleteAppointment() {
         try {
-            // Get the selected appointment from the table
+// Get the selected appointment from the table
             Appointment selectedAppointment = (Appointment) appointmentsTableView.getSelectionModel().getSelectedItem();
-            // Prepare the delete statement for the appointment
-            PreparedStatement stmt1 = JDBC.getConnection().prepareStatement("DELETE FROM appointments WHERE appointment_id = ?");
-            stmt1.setInt(1, selectedAppointment.getAppointmentID());
-            // Execute the delete statement for the appointment
-            stmt1.executeUpdate();
-            retrieveAppointmentsFromDB();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void updateAppointment() {
-        try (Connection connection = JDBC.getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT Type FROM appointments WHERE Type = ?");
-             PreparedStatement stmt = connection.prepareStatement("UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?")) {
-            // Get the selected appointment from the table
-            Appointment selectedAppointment = (Appointment) appointmentsTableView.getSelectionModel().getSelectedItem();
-            // Get the new values from the input fields
-            String title = titleTextField.getText();
-            String description = descriptionTextField.getText();
-            String location = locationTextField.getText();
-            Object selectedItem = typeComboBox.getSelectionModel().getSelectedItem();
-            statement.setString(1, (String) selectedItem);
-            ResultSet result = statement.executeQuery();
-            result.next();
-            String type = result.getString("Type");
-            Object selectedItem2 = contactComboBox.getSelectionModel().getSelectedItem();
-            PreparedStatement statement2 = connection.prepareStatement("SELECT Contact_ID FROM contacts WHERE Contact_Name = ?");
-            statement2.setString(1, (String) selectedItem2);
-            ResultSet result2 = statement2.executeQuery();
-            result2.next();
-            int contactID = result2.getInt("Contact_ID");
-            int customerID = Integer.parseInt(customerIdTextField.getText());
-            int userID = Integer.parseInt(userIdTextField.getText());
-            // Concatenate start date and time into one variable
-            LocalDate startDate = startDatePicker.getValue();
-            LocalTime startTime = LocalTime.parse((String) startTimePicker.getSelectionModel().getSelectedItem(), DateTimeFormatter.ofPattern("hh:mm a"));
-            LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
-            LocalDate endDate = endDatePicker.getValue();
-            LocalTime endTime = LocalTime.parse((String) endTimePicker.getSelectionModel().getSelectedItem(), DateTimeFormatter.ofPattern("hh:mm a"));
-            LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
-            // Set parameter values for the update statement
-            stmt.setString(1, title);
-            stmt.setString(2, description);
-            stmt.setString(3, location);
-            stmt.setString(4, type);
-            stmt.setTimestamp(5, Timestamp.valueOf(startDateTime));
-            stmt.setTimestamp(6, Timestamp.valueOf(endDateTime));
-            stmt.setInt(7, customerID);
-            stmt.setInt(8, userID);
-            stmt.setInt(9, contactID);
-            stmt.setInt(10, selectedAppointment.getAppointmentID());
-            // Execute the update statement
-            stmt.executeUpdate();
-            clearForm();
-            // Refresh the appointment table view
-            retrieveAppointmentsFromDB();
+            if (selectedAppointment != null) {
+// Ask the user for confirmation
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation Dialog");
+                alert.setHeaderText("Delete Appointment");
+                alert.setContentText(String.format("Are you sure you want to cancel the appointment with ID %d (%s)?", selectedAppointment.getAppointmentID(), selectedAppointment.getType()));
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    // Prepare the delete statement for the appointment
+                    PreparedStatement stmt1 = JDBC.getConnection().prepareStatement("DELETE FROM appointments WHERE appointment_id = ?");
+                    stmt1.setInt(1, selectedAppointment.getAppointmentID());
+                    // Execute the delete statement for the appointment
+                    stmt1.executeUpdate();
+                    retrieveAppointmentsFromDB();
+                }
+            } else {
+                // No appointment selected
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning Dialog");
+                alert.setHeaderText("No Appointment Selected");
+                alert.setContentText("Please select an appointment to delete.");
+                alert.showAndWait();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
 
+        @FXML
+        private void updateAppointment () {
+            try (Connection connection = JDBC.getConnection();
+                 PreparedStatement statement = connection.prepareStatement("SELECT Type FROM appointments WHERE Type = ?");
+                 PreparedStatement stmt = connection.prepareStatement("UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?")) {
+                // Get the selected appointment from the table
+                Appointment selectedAppointment = (Appointment) appointmentsTableView.getSelectionModel().getSelectedItem();
+                // Get the new values from the input fields
+                String title = titleTextField.getText();
+                String description = descriptionTextField.getText();
+                String location = locationTextField.getText();
+                Object selectedItem = typeComboBox.getSelectionModel().getSelectedItem();
+                statement.setString(1, (String) selectedItem);
+                ResultSet result = statement.executeQuery();
+                result.next();
+                String type = result.getString("Type");
+                Object selectedItem2 = contactComboBox.getSelectionModel().getSelectedItem();
+                PreparedStatement statement2 = connection.prepareStatement("SELECT Contact_ID FROM contacts WHERE Contact_Name = ?");
+                statement2.setString(1, (String) selectedItem2);
+                ResultSet result2 = statement2.executeQuery();
+                result2.next();
+                int contactID = result2.getInt("Contact_ID");
+                int customerID = Integer.parseInt(customerIdTextField.getText());
+                int userID = Integer.parseInt(userIdTextField.getText());
+                // Concatenate start date and time into one variable
+                LocalDate startDate = startDatePicker.getValue();
+                LocalTime startTime = LocalTime.parse((String) startTimePicker.getSelectionModel().getSelectedItem(), DateTimeFormatter.ofPattern("hh:mm a"));
+                LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
+                LocalDate endDate = endDatePicker.getValue();
+                LocalTime endTime = LocalTime.parse((String) endTimePicker.getSelectionModel().getSelectedItem(), DateTimeFormatter.ofPattern("hh:mm a"));
+                LocalDateTime endDateTime = LocalDateTime.of(endDate, endTime);
+                // Set parameter values for the update statement
+                stmt.setString(1, title);
+                stmt.setString(2, description);
+                stmt.setString(3, location);
+                stmt.setString(4, type);
+                stmt.setTimestamp(5, Timestamp.valueOf(startDateTime));
+                stmt.setTimestamp(6, Timestamp.valueOf(endDateTime));
+                stmt.setInt(7, customerID);
+                stmt.setInt(8, userID);
+                stmt.setInt(9, contactID);
+                stmt.setInt(10, selectedAppointment.getAppointmentID());
+                // Execute the update statement
+                stmt.executeUpdate();
+                clearForm();
+                // Refresh the appointment table view
+                retrieveAppointmentsFromDB();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
 
 
-}
+    }
