@@ -40,6 +40,28 @@ public class AppointmentsController implements Initializable {
     public ComboBox startTimePicker;
     public ComboBox endTimePicker;
     public Button updateButton;
+    public TableView appointmentsWeekTableView;
+    public TableView appointmentsMonthTableView;
+    public TableColumn appointmentIdColumn1;
+    public TableColumn descriptionColumn1;
+    public TableColumn titleColumn1;
+    public TableColumn locationColumn1;
+    public TableColumn contactColumn1;
+    public TableColumn typeColumn1;
+    public TableColumn startDateColumn1;
+    public TableColumn endDateColumn1;
+    public TableColumn customerIdColumn1;
+    public TableColumn userIdColumn1;
+    public TableColumn appointmentIdColumn2;
+    public TableColumn titleColumn2;
+    public TableColumn descriptionColumn2;
+    public TableColumn locationColumn2;
+    public TableColumn contactColumn2;
+    public TableColumn typeColumn2;
+    public TableColumn startDateColumn2;
+    public TableColumn endDateColumn2;
+    public TableColumn customerIdColumn2;
+    public TableColumn userIdColumn2;
 
     @FXML
     private TextField appointmentIdTextField;

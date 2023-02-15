@@ -75,9 +75,9 @@
                 </TableView>
             </content>
          </Tab>
-         <Tab id="appointmentsByMonthTab" text="Appointments By Month">
+         <Tab id="appointmentsMonthTab" text="Appointments By Month">
             <content>
-               <TableView fx:id="appointmentsTableView1" prefHeight="300" prefWidth="1200">
+               <TableView fx:id="appointmentsMonthTableView" prefHeight="300" prefWidth="1200">
                   <columns>
                      <TableColumn fx:id="appointmentIdColumn1" text="Appointment ID" />
                      <TableColumn fx:id="titleColumn1" text="Title" />
@@ -93,9 +93,9 @@
                </TableView>
             </content>
          </Tab>
-         <Tab id="appointmentsByWeekTab" text="Appointments By Week">
+         <Tab id="appointmentsWeekTab" text="Appointments By Week">
             <content>
-               <TableView fx:id="appointmentsTableView2" prefHeight="300" prefWidth="1200">
+               <TableView fx:id="appointmentsWeekTableView" prefHeight="300" prefWidth="1200">
                   <columns>
                      <TableColumn fx:id="appointmentIdColumn2" text="Appointment ID" />
                      <TableColumn fx:id="titleColumn2" text="Title" />
