@@ -7,11 +7,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -62,6 +60,10 @@ public class AppointmentsController implements Initializable {
     public TableColumn endDateColumn2;
     public TableColumn customerIdColumn2;
     public TableColumn userIdColumn2;
+    public TabPane appointmentsTabPane;
+    public Tab allAppointmentsTab;
+    public Tab appointmentsMonthTab;
+    public Tab appointmentsWeekTab;
 
     @FXML
     private TextField appointmentIdTextField;
@@ -85,7 +87,7 @@ public class AppointmentsController implements Initializable {
     private TextField userIdTextField;
 
     private ObservableList<Appointment> appointmentList = FXCollections.observableArrayList();
-    private Appointment selectedAppointment;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -94,22 +96,38 @@ public class AppointmentsController implements Initializable {
         populateContactComboBox();
         populateTimePicker(startTimePicker);
         populateTimePicker(endTimePicker);
+        int currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1;
+        int currentWeek = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
         retrieveAppointmentsFromDB();
 
+        appointmentsTabPane.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldTab, newTab) -> {
+                    if (newTab == appointmentsMonthTab) {
+                        retrieveAppointmentsByMonthFromDB(currentMonth);
+                    } else if (newTab == appointmentsWeekTab) {
+                        retrieveAppointmentsByWeekFromDB(currentWeek);
+                    } else {
+                        retrieveAppointmentsFromDB();
+                    }
+                }
+        );
     }
+
 
     private void retrieveAppointmentsFromDB() {
         try {
             // Prepare the select statement
-            PreparedStatement stmt = JDBC.getConnection().prepareStatement("SELECT Appointment_ID, Title, Description, Location, Contact_ID, Type, Start, End, Customer_ID, User_ID FROM appointments");
+            PreparedStatement stmt = JDBC.getConnection().prepareStatement(
+                    "SELECT Appointment_ID, Title, Description, Location, Contact_ID, Type, Start, End, Customer_ID, User_ID FROM appointments"
+            );
+
             // Execute the select statement
             ResultSet resultSet = stmt.executeQuery();
 
-            PreparedStatement stmt2 = JDBC.getConnection().prepareStatement("SELECT Start FROM appointments");
-            ResultSet resultSet2 = stmt2.executeQuery();
-            // Clear the customer list
+            // Clear the appointment list
             appointmentList.clear();
-            // Populate the customer list with data from the result set
+
+            // Populate the appointment list with data from the result set
             while (resultSet.next()) {
                 appointmentList.add(new Appointment(
                         resultSet.getInt("Appointment_ID"),
@@ -124,9 +142,12 @@ public class AppointmentsController implements Initializable {
                         resultSet.getInt("User_ID")
                 ));
             }
+
             // Close the connection
-            // Set the items of the customer table to the customer list
+
+            // Set the items of the appointment table to the appointment list
             appointmentsTableView.setItems(appointmentList);
+
             // Set cell values for the table columns
             appointmentIdColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
             titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -142,6 +163,113 @@ public class AppointmentsController implements Initializable {
             e.printStackTrace();
         }
     }
+
+    private void retrieveAppointmentsByMonthFromDB(int month) {
+        try {
+            // Prepare the select statement with a WHERE clause to filter by month
+            PreparedStatement stmt = JDBC.getConnection().prepareStatement(
+                    "SELECT Appointment_ID, Title, Description, Location, Contact_ID, Type, Start, End, Customer_ID, User_ID " +
+                            "FROM appointments " +
+                            "WHERE MONTH(Start) = ?"
+            );
+            stmt.setInt(1, month);
+
+            // Execute the select statement
+            ResultSet resultSet = stmt.executeQuery();
+
+            // Clear the appointment list
+            appointmentList.clear();
+
+            // Populate the appointment list with data from the result set
+            while (resultSet.next()) {
+                appointmentList.add(new Appointment(
+                        resultSet.getInt("Appointment_ID"),
+                        resultSet.getString("Title"),
+                        resultSet.getString("Description"),
+                        resultSet.getString("Location"),
+                        resultSet.getInt("Contact_ID"),
+                        resultSet.getString("Type"),
+                        resultSet.getTimestamp("Start"),
+                        resultSet.getTimestamp("End"),
+                        resultSet.getInt("Customer_ID"),
+                        resultSet.getInt("User_ID")
+                ));
+            }
+
+            // Set the items of the appointment table to the appointment list
+            appointmentsMonthTableView.setItems(appointmentList);
+
+            // Set cell values for the table columns
+            appointmentIdColumn1.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
+            titleColumn1.setCellValueFactory(new PropertyValueFactory<>("title"));
+            descriptionColumn1.setCellValueFactory(new PropertyValueFactory<>("description"));
+            locationColumn1.setCellValueFactory(new PropertyValueFactory<>("location"));
+            contactColumn1.setCellValueFactory(new PropertyValueFactory<>("contactID"));
+            typeColumn1.setCellValueFactory(new PropertyValueFactory<>("type"));
+            startDateColumn1.setCellValueFactory(new PropertyValueFactory<>("startDateTime"));
+            endDateColumn1.setCellValueFactory(new PropertyValueFactory<>("endDateTime"));
+            customerIdColumn1.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+            userIdColumn1.setCellValueFactory(new PropertyValueFactory<>("userID"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
+
+
+    private void retrieveAppointmentsByWeekFromDB(int week) {
+        try {
+            // Prepare the select statement with a WHERE clause to filter by week
+            PreparedStatement stmt = JDBC.getConnection().prepareStatement(
+                    "SELECT Appointment_ID, Title, Description, Location, Contact_ID, Type, Start, End, Customer_ID, User_ID "
+                            + "FROM appointments "
+                            + "WHERE WEEK(Start, 1) = ?"
+            );
+            stmt.setInt(1, week);
+            // Execute the select statement
+            ResultSet resultSet = stmt.executeQuery();
+            // Clear the appointment list
+            appointmentList.clear();
+            // Populate the appointment list with data from the result set
+            while (resultSet.next()) {
+                appointmentList.add(new Appointment(
+                        resultSet.getInt("Appointment_ID"),
+                        resultSet.getString("Title"),
+                        resultSet.getString("Description"),
+                        resultSet.getString("Location"),
+                        resultSet.getInt("Contact_ID"),
+                        resultSet.getString("Type"),
+                        resultSet.getTimestamp("Start"),
+                        resultSet.getTimestamp("End"),
+                        resultSet.getInt("Customer_ID"),
+                        resultSet.getInt("User_ID")
+                ));
+            }
+            // Set the items of the appointment table to the appointment list
+            appointmentsWeekTableView.setItems(appointmentList);
+            // Set cell values for the table columns
+            appointmentIdColumn2.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
+            titleColumn2.setCellValueFactory(new PropertyValueFactory<>("title"));
+            descriptionColumn2.setCellValueFactory(new PropertyValueFactory<>("description"));
+            locationColumn2.setCellValueFactory(new PropertyValueFactory<>("location"));
+            contactColumn2.setCellValueFactory(new PropertyValueFactory<>("contactID"));
+            typeColumn2.setCellValueFactory(new PropertyValueFactory<>("type"));
+            startDateColumn2.setCellValueFactory(new PropertyValueFactory<>("startDateTime"));
+            endDateColumn2.setCellValueFactory(new PropertyValueFactory<>("endDateTime"));
+            customerIdColumn2.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+            userIdColumn2.setCellValueFactory(new PropertyValueFactory<>("userID"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
 
     private void populateTypeComboBox() {
         try {
