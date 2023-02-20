@@ -151,8 +151,7 @@ public class AppointmentsController implements Initializable {
                         resultSet.getInt("User_ID")
                 ));
             }
-            // Close the connection
-            // Set the items of the appointment table to the appointment list
+
             appointmentsTableView.setItems(appointmentList);
             // Set cell values for the table columns
             appointmentIdColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
