@@ -534,22 +534,42 @@ public class AppointmentsController implements Initializable {
                 return;
             }
 
-            for (Appointment appointment : appointmentList) {
-                LocalDateTime appointmentStart = appointment.getStartDateTime().toLocalDateTime();
-                LocalDateTime appointmentEnd = appointment.getEndDateTime().toLocalDateTime();
+            try (
+                 PreparedStatement stmt4 = connection.prepareStatement(
+                         "SELECT * FROM appointments WHERE Customer_ID = ? AND ((Start >= ? AND Start < ?) OR (End > ? AND End <= ?) OR (Start <= ? AND End >= ?))")) {
 
-                if ((startDateTime.isAfter(appointmentStart) && startDateTime.isBefore(appointmentEnd))
-                        || (endDateTime.isAfter(appointmentStart) && endDateTime.isBefore(appointmentEnd))
-                        || (startDateTime.isBefore(appointmentStart) && endDateTime.isAfter(appointmentEnd))) {
-                    // Display error message
+                // Set the parameters for the query
+                stmt4.setInt(1, customerID);
+                stmt4.setTimestamp(2, Timestamp.valueOf(startDateTime));
+                stmt4.setTimestamp(3, Timestamp.valueOf(endDateTime));
+                stmt4.setTimestamp(4, Timestamp.valueOf(startDateTime));
+                stmt4.setTimestamp(5, Timestamp.valueOf(endDateTime));
+                stmt4.setTimestamp(6, Timestamp.valueOf(startDateTime));
+                stmt4.setTimestamp(7, Timestamp.valueOf(endDateTime));
+
+                ResultSet rs = stmt.executeQuery();
+
+                if (rs.next()) {
+                    // Display an error message to the user
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error");
-                    alert.setHeaderText("Scheduling Error");
-                    alert.setContentText("The appointment overlaps with another appointment.");
+                    alert.setHeaderText("Overlapping appointment");
+                    alert.setContentText("The customer already has an appointment scheduled during the requested time.");
                     alert.showAndWait();
                     return;
                 }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+                // Display an error message to the user
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Database error");
+                alert.setContentText("An error occurred while checking for overlapping appointments. Please try again later.");
+                alert.showAndWait();
+                return;
             }
+
 
 
             // Execute the update statement
