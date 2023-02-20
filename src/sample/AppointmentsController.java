@@ -4,11 +4,9 @@ import java.net.URL;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Month;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.*;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -120,15 +118,26 @@ public class AppointmentsController implements Initializable {
             PreparedStatement stmt = JDBC.getConnection().prepareStatement(
                     "SELECT Appointment_ID, Title, Description, Location, Contact_ID, Type, Start, End, Customer_ID, User_ID FROM appointments"
             );
-
             // Execute the select statement
             ResultSet resultSet = stmt.executeQuery();
-
             // Clear the appointment list
             appointmentList.clear();
-
             // Populate the appointment list with data from the result set
             while (resultSet.next()) {
+                // Get the start date and time in the local timezone of the user's computer
+                Timestamp startTimestamp = resultSet.getTimestamp("Start");
+                LocalDateTime startLocalDateTime = startTimestamp.toLocalDateTime();
+                ZonedDateTime startZonedDateTime = startLocalDateTime.atZone(ZoneId.systemDefault());
+                ZonedDateTime localStartZonedDateTime = startZonedDateTime.withZoneSameInstant(ZoneId.systemDefault());
+                Timestamp localStartTimestamp = Timestamp.valueOf(localStartZonedDateTime.toLocalDateTime());
+
+                // Get the end date and time in the local timezone of the user's computer
+                Timestamp endTimestamp = resultSet.getTimestamp("End");
+                LocalDateTime endLocalDateTime = endTimestamp.toLocalDateTime();
+                ZonedDateTime endZonedDateTime = endLocalDateTime.atZone(ZoneId.systemDefault());
+                ZonedDateTime localEndZonedDateTime = endZonedDateTime.withZoneSameInstant(ZoneId.systemDefault());
+                Timestamp localEndTimestamp = Timestamp.valueOf(localEndZonedDateTime.toLocalDateTime());
+
                 appointmentList.add(new Appointment(
                         resultSet.getInt("Appointment_ID"),
                         resultSet.getString("Title"),
@@ -136,18 +145,15 @@ public class AppointmentsController implements Initializable {
                         resultSet.getString("Location"),
                         resultSet.getInt("Contact_ID"),
                         resultSet.getString("Type"),
-                        resultSet.getTimestamp("Start"),
-                        resultSet.getTimestamp("End"),
+                        localStartTimestamp, // use the local start timestamp
+                        localEndTimestamp, // use the local end timestamp
                         resultSet.getInt("Customer_ID"),
                         resultSet.getInt("User_ID")
                 ));
             }
-
             // Close the connection
-
             // Set the items of the appointment table to the appointment list
             appointmentsTableView.setItems(appointmentList);
-
             // Set cell values for the table columns
             appointmentIdColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
             titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -163,6 +169,8 @@ public class AppointmentsController implements Initializable {
             e.printStackTrace();
         }
     }
+
+
 
     private void retrieveAppointmentsByMonthFromDB(int month) {
         try {
@@ -350,6 +358,62 @@ public class AppointmentsController implements Initializable {
             stmt.setInt(9, contactID);
 
             // Execute the insert statement
+            LocalTime businessHoursStart = LocalTime.of(8, 0);
+            LocalTime businessHoursEnd = LocalTime.of(22, 0);
+            ZoneId est = ZoneId.of("America/New_York");
+
+             startDateTime = LocalDateTime.of(startDate, startTime);
+             endDateTime = LocalDateTime.of(endDate, endTime);
+
+            ZonedDateTime startZoned = ZonedDateTime.of(startDateTime, est);
+            ZonedDateTime endZoned = ZonedDateTime.of(endDateTime, est);
+
+            if (startZoned.toLocalTime().isBefore(businessHoursStart) || endZoned.toLocalTime().isAfter(businessHoursEnd)) {
+                // Display an error message to the user
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Invalid appointment time");
+                alert.setContentText("Appointments can only be scheduled during business hours (8:00 a.m. to 10:00 p.m. EST, including weekends).");
+                alert.showAndWait();
+                return;
+            }
+            try (
+                 PreparedStatement stmt3 = connection.prepareStatement(
+                         "SELECT * FROM appointments WHERE Customer_ID = ? AND ((Start >= ? AND Start < ?) OR (End > ? AND End <= ?) OR (Start <= ? AND End >= ?))")) {
+
+                // Set the parameters for the query
+                stmt3.setInt(1, customerID);
+                stmt3.setTimestamp(2, Timestamp.valueOf(startDateTime));
+                stmt3.setTimestamp(3, Timestamp.valueOf(endDateTime));
+                stmt3.setTimestamp(4, Timestamp.valueOf(startDateTime));
+                stmt3.setTimestamp(5, Timestamp.valueOf(endDateTime));
+                stmt3.setTimestamp(6, Timestamp.valueOf(startDateTime));
+                stmt3.setTimestamp(7, Timestamp.valueOf(endDateTime));
+
+                ResultSet rs = stmt.executeQuery();
+
+                if (rs.next()) {
+                    // Display an error message to the user
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Overlapping appointment");
+                    alert.setContentText("The customer already has an appointment scheduled during the requested time.");
+                    alert.showAndWait();
+                    return;
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+                // Display an error message to the user
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Database error");
+                alert.setContentText("An error occurred while checking for overlapping appointments. Please try again later.");
+                alert.showAndWait();
+                return;
+            }
+
+
             stmt.executeUpdate();
             clearForm();
 
@@ -456,6 +520,38 @@ public class AppointmentsController implements Initializable {
             stmt.setInt(8, userID);
             stmt.setInt(9, contactID);
             stmt.setInt(10, selectedAppointment.getAppointmentID());
+
+             startTime = LocalTime.parse((String) startTimePicker.getSelectionModel().getSelectedItem(), DateTimeFormatter.ofPattern("hh:mm a"));
+             endTime = LocalTime.parse((String) endTimePicker.getSelectionModel().getSelectedItem(), DateTimeFormatter.ofPattern("hh:mm a"));
+
+            if (startTime.isBefore(LocalTime.of(8, 0)) || endTime.isAfter(LocalTime.of(22, 0))) {
+                // Display error message
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Scheduling Error");
+                alert.setContentText("The appointment time must be between 8:00 a.m. and 10:00 p.m. EST, including weekends.");
+                alert.showAndWait();
+                return;
+            }
+
+            for (Appointment appointment : appointmentList) {
+                LocalDateTime appointmentStart = appointment.getStartDateTime().toLocalDateTime();
+                LocalDateTime appointmentEnd = appointment.getEndDateTime().toLocalDateTime();
+
+                if ((startDateTime.isAfter(appointmentStart) && startDateTime.isBefore(appointmentEnd))
+                        || (endDateTime.isAfter(appointmentStart) && endDateTime.isBefore(appointmentEnd))
+                        || (startDateTime.isBefore(appointmentStart) && endDateTime.isAfter(appointmentEnd))) {
+                    // Display error message
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Scheduling Error");
+                    alert.setContentText("The appointment overlaps with another appointment.");
+                    alert.showAndWait();
+                    return;
+                }
+            }
+
+
             // Execute the update statement
             stmt.executeUpdate();
             clearForm();
@@ -465,6 +561,7 @@ public class AppointmentsController implements Initializable {
             e.printStackTrace();
         }
     }
+
 
 
 }
