@@ -83,6 +83,10 @@ public class AppointmentsController implements Initializable {
     private TextField customerIdTextField;
     @FXML
     private TextField userIdTextField;
+    @FXML
+    private TextArea reportTextArea;
+
+
 
     private ObservableList<Appointment> appointmentList = FXCollections.observableArrayList();
 
