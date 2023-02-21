@@ -389,7 +389,8 @@ public class AppointmentsController implements Initializable {
                 stmt3.setTimestamp(6, Timestamp.valueOf(startDateTime));
                 stmt3.setTimestamp(7, Timestamp.valueOf(endDateTime));
 
-                ResultSet rs = stmt.executeQuery();
+                ResultSet rs = stmt3.executeQuery();
+
 
                 if (rs.next()) {
                     // Display an error message to the user
