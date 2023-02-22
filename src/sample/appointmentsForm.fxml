@@ -8,11 +8,12 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="1000" prefWidth="1000" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17" fx:controller="sample.AppointmentsController">
+<VBox prefHeight="1000" prefWidth="1000" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.AppointmentsController">
     <HBox spacing="10">
         <VBox spacing="19">
             <Label text="Appointment ID:" />
@@ -44,6 +45,7 @@
             <TextField fx:id="customerIdTextField" />
             <TextField fx:id="userIdTextField" />
         </VBox>
+      <TextArea id="reportTextArea" prefHeight="341.0" prefWidth="636.0" />
     </HBox>
     <HBox spacing="10">
         <Button fx:id="saveApptButton" onAction="#addAppointment" text="Save" />
