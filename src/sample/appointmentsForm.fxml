@@ -56,9 +56,9 @@
 
 
     </HBox>
-   <TabPane fx:id="appointmentsTabPane">
+   <TabPane>
       <tabs>
-         <Tab fx:id="allAppointmentsTab" text="All Appointments">
+         <Tab id="allAppointmentsTab" text="All Appointments">
             <content>
             
                                <TableView fx:id="appointmentsTableView" prefHeight="300" prefWidth="1200">
@@ -77,9 +77,9 @@
                 </TableView>
             </content>
          </Tab>
-         <Tab fx:id="appointmentsMonthTab" text="Appointments By Month">
+         <Tab id="appointmentsByMonthTab" text="Appointments By Month">
             <content>
-               <TableView fx:id="appointmentsMonthTableView" prefHeight="300" prefWidth="1200">
+               <TableView fx:id="appointmentsTableView1" prefHeight="300" prefWidth="1200">
                   <columns>
                      <TableColumn fx:id="appointmentIdColumn1" text="Appointment ID" />
                      <TableColumn fx:id="titleColumn1" text="Title" />
@@ -95,9 +95,9 @@
                </TableView>
             </content>
          </Tab>
-         <Tab fx:id="appointmentsWeekTab" text="Appointments By Week">
+         <Tab id="appointmentsByWeekTab" text="Appointments By Week">
             <content>
-               <TableView fx:id="appointmentsWeekTableView" prefHeight="300" prefWidth="1200">
+               <TableView fx:id="appointmentsTableView2" prefHeight="300" prefWidth="1200">
                   <columns>
                      <TableColumn fx:id="appointmentIdColumn2" text="Appointment ID" />
                      <TableColumn fx:id="titleColumn2" text="Title" />
