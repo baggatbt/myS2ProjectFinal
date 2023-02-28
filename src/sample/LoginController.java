@@ -23,6 +23,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ResourceBundle;
 
+/**
+ * This class contains the logic for the login controller functions, such as handling logins and recording login activity
+ */
 public class LoginController implements Initializable {
 
     @FXML
@@ -37,6 +40,11 @@ public class LoginController implements Initializable {
     @FXML
     private Button loginButton;
 
+    /**
+     * This intializes the connection to the database and handles user login's and records activity.
+     * @param url a url as a parameter
+     * @param resourceBundle a resource bundle as a parameter
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Handle login button click
@@ -106,6 +114,13 @@ public class LoginController implements Initializable {
         });
     }
 
+    /**
+     * This method gets any upcoming appointments between the start and end times.
+     * @param start a Timestamp as a parameter
+     * @param end a Timestamp as a parameter
+     * @return returns the preparedstatement
+     * @throws SQLException throws an SQl exception
+     */
     private ResultSet getUpcomingAppointments(Timestamp start, Timestamp end) throws SQLException {
         String sql = "SELECT * FROM appointments WHERE Start BETWEEN ? AND ?";
         JDBC.makePreparedStatement(sql, JDBC.getConnection());

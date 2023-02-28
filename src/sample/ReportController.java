@@ -18,6 +18,10 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.scene.control.ScrollPane;
 
+/**
+ * This class contains the logic for the report controller.
+ * It is responsible for generating reports and displaying them in the text area of the GUI
+ */
 public class ReportController implements Initializable {
 
     @FXML
@@ -30,6 +34,11 @@ public class ReportController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
 
+    /**
+     * This method takes the user back to the appointments form
+     * @param actionEvent an actionEvent as a parameter
+     * @throws IOException throws an IOException
+     */
     public void goToAppointments(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("appointmentsForm.fxml"));
         Parent root = loader.load();
@@ -39,6 +48,11 @@ public class ReportController implements Initializable {
         stage.show();
     }
 
+    /**
+     * This method generates a report for contact schedules
+     * @param actionEvent an ActionEvent as a parameter
+     * @throws IOException throws an IOException
+     */
     public void contactSchedulesReport(ActionEvent actionEvent) throws IOException {
         try {
             // Prepare the select statement
@@ -69,6 +83,11 @@ public class ReportController implements Initializable {
         }
     }
 
+    /**
+     * This method generates a report containing the total customer appointments sorted by month and type
+     * @param actionEvent an ActionEvent as a parameter
+     * @throws IOException  throws an IOException
+     */
     public void totalCustomerReport(ActionEvent actionEvent) throws IOException {
         try {
             // Prepare the select statement
@@ -96,6 +115,11 @@ public class ReportController implements Initializable {
         }
     }
 
+    /**
+     * This method generates a report of all the current customers in the database
+     * @param actionEvent an ActionEvent as a parameter
+     * @throws IOException throws IOException
+     */
     public void allCurrentCustomersReport(ActionEvent actionEvent) throws IOException {
         try {
             // Prepare the select statement

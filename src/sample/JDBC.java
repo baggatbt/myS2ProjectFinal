@@ -4,6 +4,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * This class contains the connection information for the database used in the project
+ */
 public class JDBC {
     private static final String protocol = "jdbc";
     private static final String vendor = ":mysql:";
@@ -16,6 +19,9 @@ public class JDBC {
     private static Connection connection = null;  // Connection Interface
     private static PreparedStatement preparedStatement;
 
+    /**
+     * This method gets a connection to the database
+     */
     public static void makeConnection() {
 
         try {
@@ -44,12 +50,24 @@ public class JDBC {
         }
     }
 
+    /**
+     * This method creates a prepared statement to interact with the database
+     * @param sqlStatement an SQL statement as a parameter
+     * @param conn a connection as a parameter
+     * @throws SQLException an SQLException as a parameter
+     */
     public static void makePreparedStatement(String sqlStatement, Connection conn) throws SQLException {
         if (conn != null)
             preparedStatement = conn.prepareStatement(sqlStatement);
         else
             System.out.println("Prepared Statement Creation Failed!");
     }
+
+    /**
+     * This methods gets a prepared statement
+     * @return the prepared statement
+     * @throws SQLException throws an SQLException
+     */
     public static PreparedStatement getPreparedStatement() throws SQLException {
         if (preparedStatement != null)
             return preparedStatement;
