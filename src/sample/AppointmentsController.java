@@ -290,21 +290,19 @@ public class AppointmentsController implements Initializable {
 
     private void populateTypeComboBox() {
         try {
-
-
-            // Prepare a statement to select all the countries from the database
-            PreparedStatement stmt = JDBC.getConnection().prepareStatement("SELECT Type FROM appointments");
+            // Prepare a statement to select distinct types from the database
+            PreparedStatement stmt = JDBC.getConnection().prepareStatement("SELECT DISTINCT Type FROM appointments");
             // Execute the query and store the results in a ResultSet
             ResultSet rs = stmt.executeQuery();
-            // Iterate through the results and add each country to the combo box
+            // Iterate through the results and add each type to the combo box
             while (rs.next()) {
                 typeComboBox.getItems().add(rs.getString("Type"));
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 
     private void populateContactComboBox() {
         try {
