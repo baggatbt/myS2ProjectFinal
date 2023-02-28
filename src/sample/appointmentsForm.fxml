@@ -45,11 +45,10 @@
             <TextField fx:id="customerIdTextField" />
             <TextField fx:id="userIdTextField" />
         </VBox>
-      <TextArea id="reportTextArea" prefHeight="341.0" prefWidth="636.0" />
     </HBox>
     <HBox spacing="10">
         <Button fx:id="saveApptButton" onAction="#addAppointment" text="Save" />
-        <Button fx:id="cancelButton" text="Cancel" />
+        <Button fx:id="reportsButton" onAction="#goToReports" text="Reports" />
         <Button fx:id="deleteButton" onAction="#deleteAppointment" text="Delete" />
         <Button fx:id="updateButton" onAction="#updateAppointment" text="Update" />
 
