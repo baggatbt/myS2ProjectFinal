@@ -28,4 +28,12 @@ public class ReportController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
+
+    public void contactSchedulesReport(ActionEvent actionEvent) throws IOException {
+    }
+
+    public void totalCustomerReport(ActionEvent actionEvent) throws IOException {
+
+
+    }
 }
