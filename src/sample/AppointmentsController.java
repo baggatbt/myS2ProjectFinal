@@ -25,8 +25,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
-
+/**
+ * This class contains all the methods for adding/deleting/updating and retrieving database information, as well as the behavior the the GUI
+ */
 public class AppointmentsController implements Initializable {
+
 
     public TableView appointmentsTableView;
     public TableColumn appointmentIdColumn;
@@ -98,6 +101,11 @@ public class AppointmentsController implements Initializable {
 
 
     @Override
+    /**
+     * This initializes the combo boxes, as well as the appointment tables.
+     * I used lambda expressions for the reportsButton and the backToCustomersButton in order to set listeners to my FXML buttons in a clean legible way, while also allowing me to remove the onAction parameter from my FXML so all the code is handled inside my class
+     *
+     */
     public void initialize(URL url, ResourceBundle resourceBundle) {
         appointmentIdTextField.setEditable(false);
         populateTypeComboBox();
@@ -106,7 +114,7 @@ public class AppointmentsController implements Initializable {
         populateTimePicker(endTimePicker);
         int currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1;
         int currentWeek = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
-        //These two lambda expressions allow me to set listeners to my FXML buttons in a clean legible way, while also allowing me to remove the onAction parameter from my FXML so all the code is handled inside my class
+        // two lambda expressions
         reportsButton.setOnAction(actionEvent -> goToReports(actionEvent));
         backToCustomersButton.setOnAction(actionEvent -> backToCustomers(actionEvent));
         retrieveAppointmentsFromDB();
@@ -125,7 +133,10 @@ public class AppointmentsController implements Initializable {
     }
 
 
-    private void retrieveAppointmentsFromDB() {
+    /**
+     * This method gets all of the appointments from the database and adds them to the table view.
+     */
+    public void retrieveAppointmentsFromDB() {
         try {
             // Prepare the select statement
             PreparedStatement stmt = JDBC.getConnection().prepareStatement(
@@ -182,8 +193,11 @@ public class AppointmentsController implements Initializable {
         }
     }
 
-
-    private void retrieveAppointmentsByMonthFromDB(int month) {
+    /**
+     * This method gets all appointments by month from the database,
+     * @param month is the parameter taken to specify which month the table should display data from
+     */
+    public void retrieveAppointmentsByMonthFromDB(int month) {
         try {
             // Prepare the select statement with a WHERE clause to filter by month
             PreparedStatement stmt = JDBC.getConnection().prepareStatement(
@@ -234,8 +248,11 @@ public class AppointmentsController implements Initializable {
         }
     }
 
-
-    private void retrieveAppointmentsByWeekFromDB(int week) {
+    /**
+     * This method gets all appointments by week from the database,
+     * @param week is the parameter taken to specify which week the table should display data from
+     */
+    public void retrieveAppointmentsByWeekFromDB(int week) {
         try {
             // Prepare the select statement with a WHERE clause to filter by week
             PreparedStatement stmt = JDBC.getConnection().prepareStatement(
@@ -281,8 +298,10 @@ public class AppointmentsController implements Initializable {
         }
     }
 
-
-    private void populateTypeComboBox() {
+    /**
+     * This method populates the Type combo box with all types found in the database.
+     */
+    public void populateTypeComboBox() {
         try {
 
 
@@ -300,7 +319,10 @@ public class AppointmentsController implements Initializable {
         }
     }
 
-    private void populateContactComboBox() {
+    /**
+     * This method populates the contact combo box with all contact's found in the database
+     */
+    public void populateContactComboBox() {
         try {
 
 
@@ -317,9 +339,11 @@ public class AppointmentsController implements Initializable {
             e.printStackTrace();
         }
     }
-
+    /**
+     * This method allows the user to add a new appointment to the database, as well as the table view.
+     */
     @FXML
-    private void addAppointment() {
+    public void addAppointment() {
         try (Connection connection = JDBC.getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT Type FROM appointments WHERE Type = ?");
              PreparedStatement stmt = connection.prepareStatement("INSERT INTO appointments(Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
@@ -428,8 +452,10 @@ public class AppointmentsController implements Initializable {
         }
     }
 
-
-    private void clearForm() {
+    /**
+     * This method clears the form of any inputs or text
+     */
+    public void clearForm() {
         titleTextField.clear();
         descriptionTextField.clear();
         locationTextField.clear();
@@ -441,6 +467,10 @@ public class AppointmentsController implements Initializable {
         endDatePicker.setValue(null);
     }
 
+    /**
+     * This method is responsible for populating the timepicker with times for the user to select
+     * @param timePicker takes in the timePicker as a parameter
+     */
     public static void populateTimePicker(ComboBox<String> timePicker) {
         timePicker.getItems().addAll(
                 "12:00 AM", "01:00 AM", "02:00 AM", "03:00 AM", "04:00 AM", "05:00 AM", "06:00 AM", "07:00 AM", "08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM",
@@ -448,8 +478,11 @@ public class AppointmentsController implements Initializable {
         );
     }
 
+    /**
+     * This method allows the user to delete an appointment from the database.
+     */
     @FXML
-    private void deleteAppointment() {
+    public void deleteAppointment() {
         try {
 // Get the selected appointment from the table
             Appointment selectedAppointment = (Appointment) appointmentsTableView.getSelectionModel().getSelectedItem();
@@ -481,9 +514,11 @@ public class AppointmentsController implements Initializable {
         }
     }
 
-
+    /**
+     * This method allows the user to update appointment information in the database.
+     */
     @FXML
-    private void updateAppointment() {
+    public void updateAppointment() {
         try (Connection connection = JDBC.getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT Type FROM appointments WHERE Type = ?");
              PreparedStatement stmt = connection.prepareStatement("UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?")) {
@@ -585,8 +620,11 @@ public class AppointmentsController implements Initializable {
         }
     }
 
-
-    private void goToReports(ActionEvent actionEvent) {
+    /**
+     * This method switches the current form to the reportForm
+     * @param actionEvent takes in an actionEvent as a parameter
+     */
+    public void goToReports(ActionEvent actionEvent) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("reportForm.fxml"));
             Parent root = loader.load();
@@ -599,7 +637,11 @@ public class AppointmentsController implements Initializable {
         }
     }
 
-    private void backToCustomers(ActionEvent actionEvent) {
+    /**
+     * This allows the user to change the form back to the customerRecordForm
+     * @param actionEvent takes in an actionEvent as a parameter.
+     */
+    public void backToCustomers(ActionEvent actionEvent) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("customerRecordForm.fxml"));
             Parent root = loader.load();

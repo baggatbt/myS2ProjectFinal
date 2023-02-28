@@ -21,7 +21,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
-
+/**
+ * This class contains the logic for adding, deleting, updating and retriving customer information from the database.
+ */
 public class CustomerController implements Initializable {
 
 
@@ -51,6 +53,11 @@ public class CustomerController implements Initializable {
 
     private ObservableList<Customer> customerList = FXCollections.observableArrayList();
 
+    /**
+     * This method intializes the GUI combo boxes, as well as populates the table with customer data.
+     * @param url takes a url parameter
+     * @param resourceBundle takes a resource bundle parameter
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Populate the country combo box with data from the database
@@ -67,9 +74,11 @@ public class CustomerController implements Initializable {
     }
 
 
-    // Method to add a new customer to the database
+    /**
+     * This method contains the logic for adding a new customer to the database.
+     */
     @FXML
-    private void addCustomer() {
+    public void addCustomer() {
         try {
             Connection connection = JDBC.getConnection();
 
@@ -104,9 +113,13 @@ public class CustomerController implements Initializable {
     }
 
 
-    // Method to update an existing customer in the database
+
+
+    /**
+     * This method contains the logic to update an existing customer in the database
+     */
     @FXML
-    private void updateCustomer() {
+    public void updateCustomer() {
         try {
             Connection connection = JDBC.getConnection();
             // Prepare the update statement
@@ -139,9 +152,13 @@ public class CustomerController implements Initializable {
         }
     }
 
-    // Method to delete a customer from the database
+
+
+    /**
+     * This method contains the logic to delete a customer from the database
+     */
     @FXML
-    private void deleteCustomer() {
+    public void deleteCustomer() {
         try {
 
             // Get the selected customer from the table
@@ -165,7 +182,7 @@ public class CustomerController implements Initializable {
         }
     }
 
-    private void showDeleteMessage() {
+   public void showDeleteMessage() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Delete Customer");
         alert.setHeaderText(null);
@@ -174,7 +191,7 @@ public class CustomerController implements Initializable {
     }
 
 
-    private void populateCountryComboBox() {
+    public void populateCountryComboBox() {
         try {
             // Make a connection to the database
 
@@ -192,7 +209,10 @@ public class CustomerController implements Initializable {
         }
     }
 
-    private void clearForm() {
+    /**
+     * This method contains the logic to clear the form of any input or text.
+     */
+    public void clearForm() {
         // Clear the input fields
         nameField.clear();
         addressField.clear();
@@ -203,7 +223,11 @@ public class CustomerController implements Initializable {
     }
 
 
-    private void populateFirstLevelDivisionComboBox(String selectedCountry) {
+    /**
+     * This method contains the logic to populate the division combo box with items to select.
+     * @param selectedCountry takes in the selected country as a parameter
+     */
+    public void populateFirstLevelDivisionComboBox(String selectedCountry) {
         Connection connection = JDBC.getConnection();
         try {
             // Connect to the database
@@ -234,7 +258,10 @@ public class CustomerController implements Initializable {
     }
 
 
-    private void populateCustomerTable() {
+    /**
+     * This method populates the customer table with customer information from the database
+     */
+    public void populateCustomerTable() {
         try {
             // Prepare the select statement
             PreparedStatement stmt = JDBC.getConnection().prepareStatement("SELECT Customer_ID, Customer_Name, Address, Postal_Code, Phone, Division_ID FROM customers");
@@ -270,6 +297,11 @@ public class CustomerController implements Initializable {
     }
 
 
+    /**
+     * This method changes the current form to the appointments GUI
+     * @param actionEvent takes in an actionEvent as a paramter
+     * @throws IOException throws an IOexception
+     */
     public void goToAppointments(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("appointmentsForm.fxml"));
         Parent root = loader.load();

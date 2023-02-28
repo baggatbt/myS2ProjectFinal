@@ -1,5 +1,8 @@
 package sample;
 
+/**
+ * This class contains the logic, parameters and methods for the Customer object.
+ */
 public class Customer {
     private int customerID;
     private String name;

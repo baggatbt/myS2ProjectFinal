@@ -3,6 +3,9 @@ package sample;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+/**
+ * This class contains the parameters and model for the appointments, as well as the necessary getters and setters.
+ */
 public class Appointment {
     private int appointmentID;
     private String title;
