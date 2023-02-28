@@ -12,6 +12,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -51,18 +53,25 @@ public class LoginController implements Initializable {
                     System.out.println("Login Success!");
                     errorLabel.setText("");
 
-                    // check for appointments within 15 minutes
+                    // Record login activity to file
                     LocalDateTime now = LocalDateTime.now();
+                    String loginStatus = "SUCCESS";
+                    String activity = String.format("User %s logged in at %s on %s. Status: %s\n",
+                            usernameField.getText(), now.toLocalTime().toString(), now.toLocalDate().toString(), loginStatus);
+                    File loginFile = new File("login_activity.txt");
+                    FileWriter writer = new FileWriter(loginFile, true);
+                    writer.write(activity);
+                    writer.close();
+
+                    // check for appointments within 15 minutes
+                    now = LocalDateTime.now();
                     LocalDateTime in15Min = now.plusMinutes(15);
                     Timestamp start = Timestamp.valueOf(now);
                     Timestamp end = Timestamp.valueOf(in15Min);
                     ResultSet appointments = getUpcomingAppointments(start, end);
                     if (appointments.next()) {
                         // alert the user about the upcoming appointment
-                        String message = "Upcoming appointment within 15 minutes:\n\n" +
-                                "Appointment ID: " + appointments.getInt("Appointment_ID") + "\n" +
-                                "Date: " + appointments.getTimestamp("Start").toLocalDateTime().toLocalDate() + "\n" +
-                                "Time: " + appointments.getTimestamp("Start").toLocalDateTime().toLocalTime();
+                        String message = "Upcoming appointment within 15 minutes:\n\n" + "Appointment ID: " + appointments.getInt("Appointment_ID") + "\n" + "Date: " + appointments.getTimestamp("Start").toLocalDateTime().toLocalDate() + "\n" + "Time: " + appointments.getTimestamp("Start").toLocalDateTime().toLocalTime();
                         Alert alert = new Alert(Alert.AlertType.INFORMATION, message);
                         alert.showAndWait();
                     } else {
@@ -70,8 +79,7 @@ public class LoginController implements Initializable {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION, "No upcoming appointments.");
                         alert.showAndWait();
                     }
-
-                    // navigate to next screen
+                            // navigate to next screen
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("customerRecordForm.fxml"));
                     Parent customerForm = loader.load();
                     Scene customerScene = new Scene(customerForm);
@@ -82,6 +90,15 @@ public class LoginController implements Initializable {
                 } else {
                     // login failed
                     errorLabel.setText("Incorrect username or password.");
+                    // Record login activity to file
+                    LocalDateTime now = LocalDateTime.now();
+                    String loginStatus = "FAILED";
+                    String activity = String.format("User %s failed login at %s on %s. Status: %s\n",
+                            usernameField.getText(), now.toLocalTime().toString(), now.toLocalDate().toString(), loginStatus);
+                    File loginFile = new File("login_activity.txt");
+                    FileWriter writer = new FileWriter(loginFile, true);
+                    writer.write(activity);
+                    writer.close();
                 }
             } catch (SQLException | IOException e) {
                 errorLabel.setText("Error: " + e.getMessage());
