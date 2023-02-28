@@ -69,6 +69,7 @@ public class AppointmentsController implements Initializable {
     public Tab appointmentsMonthTab;
     public Tab appointmentsWeekTab;
     public Button reportsButton;
+    public Button backToCustomersButton;
 
 
     @FXML
@@ -93,7 +94,6 @@ public class AppointmentsController implements Initializable {
     private TextField userIdTextField;
 
 
-
     private ObservableList<Appointment> appointmentList = FXCollections.observableArrayList();
 
 
@@ -106,6 +106,9 @@ public class AppointmentsController implements Initializable {
         populateTimePicker(endTimePicker);
         int currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1;
         int currentWeek = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+        //These two lambda expressions allow me to set listeners to my FXML buttons in a clean legible way, while also allowing me to remove the onAction parameter from my FXML so all the code is handled inside my class
+        reportsButton.setOnAction(actionEvent -> goToReports(actionEvent));
+        backToCustomersButton.setOnAction(actionEvent -> backToCustomers(actionEvent));
         retrieveAppointmentsFromDB();
 
         appointmentsTabPane.getSelectionModel().selectedItemProperty().addListener(
@@ -180,7 +183,6 @@ public class AppointmentsController implements Initializable {
     }
 
 
-
     private void retrieveAppointmentsByMonthFromDB(int month) {
         try {
             // Prepare the select statement with a WHERE clause to filter by month
@@ -233,11 +235,6 @@ public class AppointmentsController implements Initializable {
     }
 
 
-
-
-
-
-
     private void retrieveAppointmentsByWeekFromDB(int week) {
         try {
             // Prepare the select statement with a WHERE clause to filter by week
@@ -285,24 +282,23 @@ public class AppointmentsController implements Initializable {
     }
 
 
-
-
-
     private void populateTypeComboBox() {
         try {
-            // Prepare a statement to select distinct types from the database
-            PreparedStatement stmt = JDBC.getConnection().prepareStatement("SELECT DISTINCT Type FROM appointments");
+
+
+            // Prepare a statement to select all the countries from the database
+            PreparedStatement stmt = JDBC.getConnection().prepareStatement("SELECT Type FROM appointments");
             // Execute the query and store the results in a ResultSet
             ResultSet rs = stmt.executeQuery();
-            // Iterate through the results and add each type to the combo box
+            // Iterate through the results and add each country to the combo box
             while (rs.next()) {
                 typeComboBox.getItems().add(rs.getString("Type"));
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
 
     private void populateContactComboBox() {
         try {
@@ -369,8 +365,8 @@ public class AppointmentsController implements Initializable {
             LocalTime businessHoursEnd = LocalTime.of(22, 0);
             ZoneId est = ZoneId.of("America/New_York");
 
-             startDateTime = LocalDateTime.of(startDate, startTime);
-             endDateTime = LocalDateTime.of(endDate, endTime);
+            startDateTime = LocalDateTime.of(startDate, startTime);
+            endDateTime = LocalDateTime.of(endDate, endTime);
 
             ZonedDateTime startZoned = ZonedDateTime.of(startDateTime, est);
             ZonedDateTime endZoned = ZonedDateTime.of(endDateTime, est);
@@ -385,8 +381,8 @@ public class AppointmentsController implements Initializable {
                 return;
             }
             try (
-                 PreparedStatement stmt3 = connection.prepareStatement(
-                         "SELECT * FROM appointments WHERE Customer_ID = ? AND ((Start >= ? AND Start < ?) OR (End > ? AND End <= ?) OR (Start <= ? AND End >= ?))")) {
+                    PreparedStatement stmt3 = connection.prepareStatement(
+                            "SELECT * FROM appointments WHERE Customer_ID = ? AND ((Start >= ? AND Start < ?) OR (End > ? AND End <= ?) OR (Start <= ? AND End >= ?))")) {
 
                 // Set the parameters for the query
                 stmt3.setInt(1, customerID);
@@ -487,7 +483,7 @@ public class AppointmentsController implements Initializable {
 
 
     @FXML
-    private void updateAppointment () {
+    private void updateAppointment() {
         try (Connection connection = JDBC.getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT Type FROM appointments WHERE Type = ?");
              PreparedStatement stmt = connection.prepareStatement("UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?")) {
@@ -529,8 +525,8 @@ public class AppointmentsController implements Initializable {
             stmt.setInt(9, contactID);
             stmt.setInt(10, selectedAppointment.getAppointmentID());
 
-             startTime = LocalTime.parse((String) startTimePicker.getSelectionModel().getSelectedItem(), DateTimeFormatter.ofPattern("hh:mm a"));
-             endTime = LocalTime.parse((String) endTimePicker.getSelectionModel().getSelectedItem(), DateTimeFormatter.ofPattern("hh:mm a"));
+            startTime = LocalTime.parse((String) startTimePicker.getSelectionModel().getSelectedItem(), DateTimeFormatter.ofPattern("hh:mm a"));
+            endTime = LocalTime.parse((String) endTimePicker.getSelectionModel().getSelectedItem(), DateTimeFormatter.ofPattern("hh:mm a"));
 
             if (startTime.isBefore(LocalTime.of(8, 0)) || endTime.isAfter(LocalTime.of(22, 0))) {
                 // Display error message
@@ -543,8 +539,8 @@ public class AppointmentsController implements Initializable {
             }
 
             try (
-                 PreparedStatement stmt4 = connection.prepareStatement(
-                         "SELECT * FROM appointments WHERE Customer_ID = ? AND ((Start >= ? AND Start < ?) OR (End > ? AND End <= ?) OR (Start <= ? AND End >= ?))")) {
+                    PreparedStatement stmt4 = connection.prepareStatement(
+                            "SELECT * FROM appointments WHERE Customer_ID = ? AND ((Start >= ? AND Start < ?) OR (End > ? AND End <= ?) OR (Start <= ? AND End >= ?))")) {
 
                 // Set the parameters for the query
                 stmt4.setInt(1, customerID);
@@ -579,7 +575,6 @@ public class AppointmentsController implements Initializable {
             }
 
 
-
             // Execute the update statement
             stmt.executeUpdate();
             clearForm();
@@ -591,22 +586,30 @@ public class AppointmentsController implements Initializable {
     }
 
 
-    public void goToReports(ActionEvent actionEvent) throws IOException {
+    private void goToReports(ActionEvent actionEvent) {
+        try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("reportForm.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             stage.setScene(scene);
             stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
 
-    public void backToCustomers(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("customerRecordForm.fxml"));
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
-        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+    private void backToCustomers(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("customerRecordForm.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 
