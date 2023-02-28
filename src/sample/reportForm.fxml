@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="477.0" prefWidth="600.0" xmlns:fx="http://javafx.com/javafx/17" fx:controller="sample.ReportController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="477.0" prefWidth="600.0" xmlns:fx="http://javafx.com/javafx/1" fx:controller="sample.ReportController">
    <children>
       <TextArea id="reportTextArea" layoutX="12.0" layoutY="14.0" prefHeight="368.0" prefWidth="577.0" />
       <Button id="totalCustomers" layoutX="14.0" layoutY="395.0" mnemonicParsing="false" text="Total Customer Appt's By Type and Month" />

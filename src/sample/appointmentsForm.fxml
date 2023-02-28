@@ -51,6 +51,7 @@
         <Button fx:id="reportsButton" onAction="#goToReports" text="Reports" />
         <Button fx:id="deleteButton" onAction="#deleteAppointment" text="Delete" />
         <Button fx:id="updateButton" onAction="#updateAppointment" text="Update" />
+        <Button fx:id="backToCustomersButton" onAction="#backToCustomers" text="Back To Customers" />
 
 
 

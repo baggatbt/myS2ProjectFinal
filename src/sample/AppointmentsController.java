@@ -68,6 +68,7 @@ public class AppointmentsController implements Initializable {
     public Tab allAppointmentsTab;
     public Tab appointmentsMonthTab;
     public Tab appointmentsWeekTab;
+    public Button reportsButton;
 
 
     @FXML
@@ -593,7 +594,7 @@ public class AppointmentsController implements Initializable {
 
 
     public void goToReports(ActionEvent actionEvent) throws IOException {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("reportsForm.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("reportForm.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -601,6 +602,14 @@ public class AppointmentsController implements Initializable {
             stage.show();
         }
 
+    public void backToCustomers(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("customerRecordForm.fxml"));
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
     }
+}
 
 
